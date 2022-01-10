@@ -31,7 +31,7 @@ public class DupeBook2 extends Command {
 			for(int j = 0; j < 256; j++) {
 		        int begin =0x0800;
 		        int end =  0x10FFFF;
-		        char c = (char)random.nextInt(begin,end);
+		        char c = (char)(begin + (int)(Math.random() * ((end - begin) + 1)));
 		        s = s + c;
 			}
 			mc.thePlayer.getHeldItem().getTagCompound().getTagList("pages").appendTag(new NBTTagString(String.valueOf(i), s));

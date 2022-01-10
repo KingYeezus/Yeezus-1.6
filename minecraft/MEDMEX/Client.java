@@ -29,7 +29,7 @@ import MEDMEX.Modules.Module;
 
 public class Client {
 	public static int protocolver = 78;
-	public static String name = "Yeezus", version = "1";
+	public static String name = "Yeezus", version = "2";
 	public static CopyOnWriteArrayList<Integer> xrayblocks = new CopyOnWriteArrayList<Integer>();
 	public static CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<Module>();
 	public static CopyOnWriteArrayList<String> friends = new CopyOnWriteArrayList<String>();
@@ -81,6 +81,8 @@ public class Client {
 		modules.add(new Regen());
 		modules.add(new CommandGUI());
 		modules.add(new AntiDesync());
+		modules.add(new AutoHighway());
+		modules.add(new AutoTNT());
 		try {
 		Config.load();
 		}catch(Exception e) {

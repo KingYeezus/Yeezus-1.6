@@ -96,11 +96,10 @@ public class ElementComboBox extends Element {
 			double ay = y + 15;
 			for (String slcd : set.getOptions()) {
 				if (mouseX >= x && mouseX <= x + width && mouseY >= ay && mouseY <= ay + FontUtil.getFontHeight() + 2) {
-					if(Client.settingsmanager.getSettingByName("Sound").getValBoolean())
-					
-					
-					if(clickgui != null && clickgui.setmgr != null)
+					if(clickgui != null && clickgui.setmgr != null) {
+						
 					clickgui.setmgr.getSettingByName(set.getName()).setValString(slcd);
+					}
 					return true;
 				}
 				ay += FontUtil.getFontHeight() + 2;

@@ -54,7 +54,7 @@ public class ChestESP extends Module{
 		    	if(o instanceof TileEntityFurnace) {
 		    		if(mc.theWorld.getBlockTileEntity(cX, cY, cZ).getBlockType() != null) {
 		    	 AxisAlignedBB B = (mc.theWorld.getBlockTileEntity(cX, cY, cZ).getBlockType().getSelectedBoundingBoxFromPool(mc.theWorld, cX, cY, cZ));
-	    		 RenderUtils.boundingESPBox(B, new Color(FurnaceColor.getRed(), FurnaceColor.getGreen(), FurnaceColor.getBlue(), (int)((120.0F + FurnaceColor.getAlpha() / 2.0F) * Alpha)));
+		    	 RenderUtils.boundingESPBox(B, new Color(FurnaceColor.getRed(), FurnaceColor.getGreen(), FurnaceColor.getBlue(), (int)((120.0F + FurnaceColor.getAlpha() / 2.0F) * Alpha)));
 	   	      	 Alpha *= 0.8F;
 	   	      	 RenderUtils.boundingESPBoxFilled(B, new Color(FurnaceColor.getRed(), FurnaceColor.getGreen(), FurnaceColor.getBlue(), (int)((120.0F + FurnaceColor.getAlpha() / 2.0F) * Alpha)));
 		    	}
@@ -62,7 +62,7 @@ public class ChestESP extends Module{
 		    	if(o instanceof TileEntityEnderChest) {
 		    		if(mc.theWorld.getBlockTileEntity(cX, cY, cZ).getBlockType() != null) {
 		    			 AxisAlignedBB B = (mc.theWorld.getBlockTileEntity(cX, cY, cZ).getBlockType().getSelectedBoundingBoxFromPool(mc.theWorld, cX, cY, cZ));
-			    		 RenderUtils.boundingESPBox(B, new Color(EnderChestColor.getRed(), EnderChestColor.getGreen(), EnderChestColor.getBlue(), (int)((120.0F + EnderChestColor.getAlpha() / 2.0F) * Alpha)));
+		    			 RenderUtils.boundingESPBox(B, new Color(EnderChestColor.getRed(), EnderChestColor.getGreen(), EnderChestColor.getBlue(), (int)((120.0F + EnderChestColor.getAlpha() / 2.0F) * Alpha)));
 			   	      	 Alpha *= 0.8F;
 			   	      	 RenderUtils.boundingESPBoxFilled(B, new Color(EnderChestColor.getRed(), EnderChestColor.getGreen(), EnderChestColor.getBlue(), (int)((120.0F + EnderChestColor.getAlpha() / 2.0F) * Alpha)));
 		    		}

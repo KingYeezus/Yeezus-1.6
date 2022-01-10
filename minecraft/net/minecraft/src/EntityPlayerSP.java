@@ -5,6 +5,7 @@ import MEDMEX.Event.EventType;
 import MEDMEX.Event.listeners.EventUpdate;
 import MEDMEX.Modules.Movement.NoSlow;
 import MEDMEX.Modules.Player.Freecam;
+import MEDMEX.Modules.World.AutoHighway;
 
 public class EntityPlayerSP extends AbstractClientPlayer
 {
@@ -149,6 +150,8 @@ public class EntityPlayerSP extends AbstractClientPlayer
             boolean var1 = this.movementInput.jump;
             float var2 = 0.8F;
             boolean var3 = this.movementInput.moveForward >= var2;
+        
+            if(!AutoHighway.stopMotion)
             this.movementInput.updatePlayerMoveState();
 
             if (this.isUsingItem() && !this.isRiding() && !NoSlow.instance.isEnabled())

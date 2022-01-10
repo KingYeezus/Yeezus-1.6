@@ -83,6 +83,13 @@ public class GuiAccountManager extends GuiScreen {
 		if(keyCode == 1) { //if u press ESC it'll go to the main menu
 			this.mc.displayGuiScreen(new MainMenu()); 
 		}
+		if(keyCode == 28) {
+			final String account = this.loginField.getText(); //this gets the text u inputed in the field
+			final String accountInfo[] = account.split(":");
+			final String email = account;
+			Session.username = email;
+			
+		}
 	}
 
 }

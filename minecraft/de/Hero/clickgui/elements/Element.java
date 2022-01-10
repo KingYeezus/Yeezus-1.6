@@ -52,7 +52,6 @@ public class Element {
 			}
 		}else if(set.isCombo()){
 			height = comboextended ? set.getOptions().size() * (FontUtil.getFontHeight() + 2) + 15 : 15;
-			
 			setstrg = sname.substring(0, 1).toUpperCase() + sname.substring(1, sname.length());
 			int longest = FontUtil.getStringWidth(setstrg);
 			for (String s : set.getOptions()) {
