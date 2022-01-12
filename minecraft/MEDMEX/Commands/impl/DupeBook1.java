@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 import MEDMEX.Client;
 import MEDMEX.Commands.Command;
@@ -22,7 +23,6 @@ public class DupeBook1 extends Command {
 	public DupeBook1() {
 		super("DupeBook1", "Creates Dupe Book1", "DupeBook1", "dupebook1");
 	}
-	Random random = new Random();
 
 	public void onCommand(String[] args, String command) {
 		if(!(mc.thePlayer.getHeldItem() == null)) {
@@ -31,15 +31,16 @@ public class DupeBook1 extends Command {
 			mc.thePlayer.getHeldItem().stackTagCompound = new NBTTagCompound();
 		if(!mc.thePlayer.getHeldItem().getTagCompound().hasKey("pages"))
 			mc.thePlayer.getHeldItem().stackTagCompound.setTag("pages", new NBTTagList());
+		Random random = new Random(1);
 		for(int i = 0; i < 50; i++) {
 	        String s = "";
-			for(int j = 0; j < 256; j++) {
-		        int begin =0x0800;
-		        int end =  0x10FFFF;
-		        char c = (char)(begin + (int)(Math.random() * ((end - begin) + 1)));
-		        
+		    int begin =0x0800;
+		    int end =  0x10FFFF;
+		    IntStream ints = random.ints(256, begin, end);
+		    for(int in : ints.toArray()) {
+		        char c = (char) in;
 		        s = s + c;
-			}
+		    }
 			mc.thePlayer.getHeldItem().getTagCompound().getTagList("pages").appendTag(new NBTTagString(String.valueOf(i), s));
 		}
 		GuiScreenBook b = new GuiScreenBook(mc.thePlayer, mc.thePlayer.getHeldItem(), true);

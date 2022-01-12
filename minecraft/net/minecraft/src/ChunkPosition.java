@@ -22,6 +22,23 @@ public class ChunkPosition
     {
         this(MathHelper.floor_double(par1Vec3.xCoord), MathHelper.floor_double(par1Vec3.yCoord), MathHelper.floor_double(par1Vec3.zCoord));
     }
+    
+    
+    public int getXStart() {
+      return this.x << 4;
+    }
+    
+    public int getZStart() {
+      return this.z << 4;
+    }
+    
+    public int getXEnd() {
+      return (this.x << 4) + 15;
+    }
+    
+    public int getZEnd() {
+      return (this.z << 4) + 15;
+    }
 
     public boolean equals(Object par1Obj)
     {

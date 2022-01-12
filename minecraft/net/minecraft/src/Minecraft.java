@@ -6,6 +6,7 @@ import MEDMEX.Client;
 import MEDMEX.Config.Config;
 import MEDMEX.Config.ConfigDrawn;
 import MEDMEX.Config.ConfigFriends;
+import MEDMEX.Config.ConfigMacro;
 import MEDMEX.Config.ConfigWaypoints;
 import MEDMEX.Modules.Player.Fastplace;
 import MEDMEX.Modules.Player.Packetmine;
@@ -1136,6 +1137,7 @@ public class Minecraft implements IPlayerUsage
     	ConfigWaypoints.save();
     	ConfigFriends.save();
     	ConfigDrawn.save();
+    	ConfigMacro.save();
         this.running = false;
     }
 

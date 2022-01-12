@@ -40,17 +40,17 @@ public class Scaffold extends Module{
 					if(mc.thePlayer.motionX > 0.02) {
 						if(mc.theWorld.isAirBlock(X+offsetX+1, (int)mc.thePlayer.posY - 2, Z+offsetZ)) {
 							int[] values = getDir(new Vec3(Vec3.fakePool,(double)X+offsetX+1, mc.thePlayer.posY - 2, (double)Z+offsetZ));
-							rotateToBlock(-90);
+							//rotateToBlock(-90);
 							mc.thePlayer.swingItem();
-							Client.sendPacket(new Packet15Place(values[0], values[1], values[2], values[3], mc.thePlayer.inventory.getStackInSlot(mc.thePlayer.inventory.currentItem), 0, 0 ,0));
+							mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem(), values[0], values[1], values[2], values[3], new Vec3(Vec3.fakePool, values[0], values[1], values[2]));
 						}
 					}
 					if(mc.thePlayer.motionX < -0.02) {
 						if(mc.theWorld.isAirBlock(X+offsetX-1, (int)mc.thePlayer.posY - 2, Z+offsetZ)) {
 							int[] values = getDir(new Vec3(Vec3.fakePool,(double)X+offsetX-1, mc.thePlayer.posY - 2, (double)Z+offsetZ));
-							rotateToBlock(90);
+							//rotateToBlock(90);
 							mc.thePlayer.swingItem();
-							Client.sendPacket(new Packet15Place(values[0], values[1], values[2], values[3], mc.thePlayer.inventory.getStackInSlot(mc.thePlayer.inventory.currentItem), 0, 0 ,0));	
+							mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem(), values[0], values[1], values[2], values[3], new Vec3(Vec3.fakePool, values[0], values[1], values[2]));
 						}
 					}
 				}
@@ -58,26 +58,26 @@ public class Scaffold extends Module{
 					if(mc.thePlayer.motionZ > 0.02) {
 						if(mc.theWorld.isAirBlock(X+offsetX, (int)mc.thePlayer.posY - 2, Z+offsetZ+1)) {
 							int[] values = getDir(new Vec3(Vec3.fakePool,(double)X+offsetX, mc.thePlayer.posY - 2, (double)Z+offsetZ+1));
-							rotateToBlock(0);
+							//rotateToBlock(0);
 							mc.thePlayer.swingItem();
-							Client.sendPacket(new Packet15Place(values[0], values[1], values[2], values[3], mc.thePlayer.inventory.getStackInSlot(mc.thePlayer.inventory.currentItem), 0, 0 ,0));
+							mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem(), values[0], values[1], values[2], values[3], new Vec3(Vec3.fakePool, values[0], values[1], values[2]));
 						}
 					}
 					if(mc.thePlayer.motionZ < -0.02) {
 						if(mc.theWorld.isAirBlock(X+offsetX, (int)mc.thePlayer.posY - 2, Z+offsetZ-1)) {
 							int[] values = getDir(new Vec3(Vec3.fakePool,(double)X+offsetX, mc.thePlayer.posY - 2, (double)Z+offsetZ-1));
-							rotateToBlock(180);
+							//rotateToBlock(180);
 							mc.thePlayer.swingItem();
-							Client.sendPacket(new Packet15Place(values[0], values[1], values[2], values[3], mc.thePlayer.inventory.getStackInSlot(mc.thePlayer.inventory.currentItem), 0, 0 ,0));
+							mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem(), values[0], values[1], values[2], values[3], new Vec3(Vec3.fakePool, values[0], values[1], values[2]));
 						}
 					}
 				}
 				
 				if(mc.theWorld.isAirBlock(X+offsetX, Y-2, Z+offsetZ)) {
 					int[] values = getDir(new Vec3(Vec3.fakePool,(double)X+offsetX, mc.thePlayer.posY - 2, (double)Z+offsetZ));
-					rotateToBlock(0);
+					//rotateToBlock(0);
 					mc.thePlayer.swingItem();
-					Client.sendPacket(new Packet15Place(values[0], values[1], values[2], values[3], mc.thePlayer.inventory.getStackInSlot(mc.thePlayer.inventory.currentItem), 0, 0 ,0));
+					mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem(), values[0], values[1], values[2], values[3], new Vec3(Vec3.fakePool, values[0], values[1], values[2]));
 				}
 			}	
 		}	

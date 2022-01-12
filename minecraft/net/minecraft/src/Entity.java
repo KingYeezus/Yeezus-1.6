@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import MEDMEX.Modules.Player.Freecam;
+import MEDMEX.Modules.Render.NoRender;
 import MEDMEX.Modules.World.Scaffold;
 import net.minecraft.server.MinecraftServer;
 
@@ -1457,6 +1458,11 @@ public abstract class Entity
      */
     public boolean isInRangeToRenderDist(double par1)
     {
+    	if(NoRender.instance.isEnabled()) {
+    		if(NoRender.shouldNotRender(this)) {
+    			return false;
+    		}
+    	}
         double var3 = this.boundingBox.getAverageEdgeLength();
         var3 *= 64.0D * this.renderDistanceWeight;
         return par1 < var3 * var3;

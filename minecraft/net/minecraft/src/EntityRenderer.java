@@ -537,7 +537,7 @@ public class EntityRenderer
     /**
      * sets up projection, view effects, camera position/rotation
      */
-    private void setupCameraTransform(float par1, int par2)
+    public void setupCameraTransform(float par1, int par2)
     {
         this.farPlaneDistance = (float)(256 >> this.mc.gameSettings.renderDistance);
         GL11.glMatrixMode(GL11.GL_PROJECTION);

@@ -10,6 +10,7 @@ import net.minecraft.src.EntityClientPlayerMP;
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.EntityMob;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.ItemSword;
 import net.minecraft.src.Material;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.McoClient;
@@ -17,6 +18,8 @@ import net.minecraft.src.Packet102WindowClick;
 import net.minecraft.src.Packet10Flying;
 import net.minecraft.src.Packet11PlayerPosition;
 import net.minecraft.src.Packet12PlayerLook;
+import net.minecraft.src.Packet14BlockDig;
+import net.minecraft.src.Packet15Place;
 import net.minecraft.src.Packet28EntityVelocity;
 import net.minecraft.src.RenderManager;
 import MEDMEX.Client;
@@ -43,6 +46,7 @@ public class KillAura extends Module{
 		Client.settingsmanager.rSetting(new Setting("Range", this, 3, 0, 6, false));
 		Client.settingsmanager.rSetting(new Setting("Rotate", this, true));
 		Client.settingsmanager.rSetting(new Setting("Criticals", this, false));
+		Client.settingsmanager.rSetting(new Setting("AutoBlock", this, false));
 		Client.settingsmanager.rSetting(new Setting("Players", this, true));
         Client.settingsmanager.rSetting(new Setting("Animals", this, false));
         Client.settingsmanager.rSetting(new Setting("Monsters", this, false));
@@ -56,6 +60,7 @@ public class KillAura extends Module{
 	
 	public void onDisable() {
 		currentTarget = null;
+		EntityClientPlayerMP.rotationoverride = false;
 	}
 	
 	public void onEvent(Event e) {
@@ -68,9 +73,13 @@ public class KillAura extends Module{
 				for(Entity ent : entities) {
 					if(isTarget(ent)) {
 						if(mc.thePlayer.getDistanceToEntity(ent) <= Client.settingsmanager.getSettingByName("Range").getValDouble()) {
+							if(Client.settingsmanager.getSettingByName("AutoBlock").getValBoolean())
+								autoBlock(true);
 							if(Client.settingsmanager.getSettingByName("Rotate").getValBoolean()) {
 								rotateToTarget(ent);
 							}
+							if(Client.settingsmanager.getSettingByName("AutoBlock").getValBoolean())
+								autoBlock(false);
 							if(timer.hasTimeElapsed((long)Client.settingsmanager.getSettingByName("Delay (ms)").getValDouble(), true)){ 
 								currentTarget = ent;
 								attackTarget(ent);
@@ -129,6 +138,30 @@ public class KillAura extends Module{
         prevTarget = ent;
        
     }
+	public boolean isBlocking = false;
+	
+	public void autoBlock(boolean shouldBlock) {
+		if(shouldBlock && !isBlocking) {
+			if(mc.thePlayer.inventory.getCurrentItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
+				Client.sendPacket(new Packet15Place(-1, -1, -1, 255, null, 0 ,0 ,0));
+				isBlocking = true;
+			}
+		}
+		if(!shouldBlock && isBlocking) {
+			Client.sendPacket(new Packet14BlockDig(5, 0, 0, 0, 0));
+			isBlocking = false;
+		}
+		
+		if(shouldBlock) {
+			if(mc.thePlayer.inventory.getCurrentItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword)
+				mc.thePlayer.setItemInUse(mc.thePlayer.inventory.getCurrentItem(), 20);
+		}else if(isBlocking) {
+			mc.thePlayer.clearItemInUse();
+		}
+		
+		
+		
+	}
 	
 	public void attackTarget(Entity e) {
 		mc.thePlayer.swingItem();
@@ -145,7 +178,7 @@ public class KillAura extends Module{
 	
 	public void onRender() {
 		   if(this.isEnabled()) {
-			   if(currentTarget != null) {
+			   if(currentTarget != null && mc.thePlayer.getDistanceToEntity(currentTarget) <= Client.settingsmanager.getSettingByName("Range").getValDouble()) {
 				   	double cX = currentTarget.posX;
 					double cY = currentTarget.boundingBox.maxY + 0.3;
 					double cZ = currentTarget.posZ;

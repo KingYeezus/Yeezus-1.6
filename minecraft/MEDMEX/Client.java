@@ -12,10 +12,12 @@ import de.Hero.settings.SettingsManager;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.Packet;
 import MEDMEX.Config.ConfigFriends;
+import MEDMEX.Config.ConfigMacro;
 import MEDMEX.Config.ConfigWaypoints;
 import MEDMEX.Event.Event;
 import MEDMEX.Event.EventPacket;
 import MEDMEX.Event.listeners.EventChat;
+import MEDMEX.Macro.Macro;
 import MEDMEX.Modules.Module.Category;
 import MEDMEX.Modules.Client.*;
 import MEDMEX.Modules.Combat.*;
@@ -29,8 +31,9 @@ import MEDMEX.Modules.Module;
 
 public class Client {
 	public static int protocolver = 78;
-	public static String name = "Yeezus", version = "2";
+	public static String name = "Yeezus", version = "3";
 	public static CopyOnWriteArrayList<Integer> xrayblocks = new CopyOnWriteArrayList<Integer>();
+	public static CopyOnWriteArrayList<Macro> macros = new CopyOnWriteArrayList<Macro>();
 	public static CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<Module>();
 	public static CopyOnWriteArrayList<String> friends = new CopyOnWriteArrayList<String>();
 	public static CopyOnWriteArrayList<Module> drawn = new CopyOnWriteArrayList<Module>();
@@ -83,6 +86,12 @@ public class Client {
 		modules.add(new AntiDesync());
 		modules.add(new AutoHighway());
 		modules.add(new AutoTNT());
+		modules.add(new FastUse());
+		modules.add(new BedAura());
+		modules.add(new HitSpheres());
+		modules.add(new Tracers());
+		modules.add(new NoRender());
+		modules.add(new NewChunks());
 		try {
 		Config.load();
 		}catch(Exception e) {
@@ -91,6 +100,7 @@ public class Client {
 		ConfigWaypoints.load();
 		ConfigFriends.load();
 		ConfigDrawn.load();
+		ConfigMacro.load();
 		clickgui = new de.Hero.clickgui.ClickGUI();
 		
 		
@@ -113,6 +123,7 @@ public static void onEvent(Event e) {
 		}
 	}
 public static void keyPress(int key) {
+	Macro.onKey(key);
 	for(Module m : modules) {
 		if(key == m.getKey()) {
 			m.toggle();

@@ -62,13 +62,11 @@ public class AutoHighway extends Module{
 					
 					if(pick != -1)
 						mc.thePlayer.inventory.currentItem = pick;
-					
 					if(mc.theWorld.getBlockId(tX, tY, tZ) == 87)
-						mc.playerController.clickBlock(tX, tY, tZ, 0);
-					else {
+						mc.playerController.onPlayerDestroyBlock(tX, tY, tZ, 0);
 						Client.sendPacket(new Packet14BlockDig(0, (int)tX, (int)tY, (int)tZ, 0));
 				    	Client.sendPacket(new Packet14BlockDig(2, (int)tX, (int)tY, (int)tZ, 0));
-					}
+					
 				}
 				CopyOnWriteArrayList<Vec3> placeVecs = findPlaceBlocks();
 				if(!placeVecs.isEmpty() && breakVecs.isEmpty()) {

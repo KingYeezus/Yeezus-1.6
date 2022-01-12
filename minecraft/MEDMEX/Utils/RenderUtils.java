@@ -7,8 +7,12 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL32;
+import org.lwjgl.util.glu.Sphere;
 
+import MEDMEX.Client;
+import MEDMEX.Modules.Combat.KillAura;
 import net.minecraft.src.AxisAlignedBB;
+import net.minecraft.src.Minecraft;
 import net.minecraft.src.PathPoint;
 import net.minecraft.src.RenderGlobal;
 import net.minecraft.src.RenderManager;
@@ -550,6 +554,66 @@ public class RenderUtils {
 	    GL11.glDepthMask(true);
 	    GL11.glDisable(3042);
 	  }
+	
+	public static void renderPlayerSphere(double par3, double par5, double par7) {
+	    float x = (float)par3;
+	    float y = (float)par5;
+	    float z = (float)par7;
+	    renderSphere(x, y, z);
+	  }
+	  
+	  static Sphere s = new Sphere();
+	  
+	  protected float zLevel;
+	  
+	  private static void renderSphere(float x, float y, float z) {
+	    GL11.glPushMatrix();
+	    GL11.glTranslatef(x, y + 1.0F, z);
+	    GL11.glColor4f(0.0F, 0.0F, 0.75F, 0.5F);
+	    GL11.glEnable(3042);
+	    GL11.glDisable(2929);
+	    GL11.glDepthMask(true);
+	    GL11.glDisable(3553);
+	    GL11.glDisable(2896);
+	    GL11.glLineWidth(1.0F);
+	    s.setDrawStyle(100011);
+	    float radius = 3.0F;
+	    if(KillAura.instance.isEnabled())
+	    	radius = (float) Client.settingsmanager.getSettingByName("Range").getValDouble();
+	    s.draw(radius, 64, 64);
+	    GL11.glEnable(3553);
+	    GL11.glPopMatrix();
+	  }
+	  
+	  public static void Chunk(net.minecraft.src.Chunk c, Color col, double yPos) {
+		    GL11.glBlendFunc(770, 771);
+		    GL11.glEnable(3042);
+		    GL11.glLineWidth(2.0F);
+		    GL11.glDisable(3553);
+		    GL11.glDisable(2929);
+		    GL11.glDepthMask(false);
+		    double startX = c.getPos().getXStart() - RenderManager.renderPosX;
+		    double endX = c.getPos().getXEnd() - RenderManager.renderPosX;
+		    double y = yPos - RenderManager.renderPosY;
+		    double startZ = c.getPos().getZStart() - RenderManager.renderPosZ;
+		    double endZ = c.getPos().getZEnd() - RenderManager.renderPosZ;
+		    GL11.glColor4f(col.getRed() / 255.0F, col.getGreen() / 255.0F, col.getBlue() / 255.0F, col.getAlpha() / 255.0F);
+		    GL11.glBegin(1);
+		    GL11.glVertex3d(startX, y, startZ);
+		    GL11.glVertex3d(endX, y, startZ);
+		    GL11.glVertex3d(endX, y, startZ);
+		    GL11.glVertex3d(endX, y, endZ);
+		    GL11.glVertex3d(endX, y, endZ);
+		    GL11.glVertex3d(startX, y, endZ);
+		    GL11.glVertex3d(startX, y, endZ);
+		    GL11.glVertex3d(startX, y, startZ);
+		    GL11.glEnd();
+		    GL11.glEnable(3553);
+		    GL11.glEnable(2929);
+		    GL11.glDepthMask(true);
+		    GL11.glDisable(3042);
+		  }
+	
 	
 	 
 	

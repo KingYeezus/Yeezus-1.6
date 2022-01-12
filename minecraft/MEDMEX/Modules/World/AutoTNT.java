@@ -29,25 +29,27 @@ public class AutoTNT extends Module{
 				int slot = InventoryUtils.getHotbarslotItem(46);
 				if(slot != -1)
 					mc.thePlayer.inventory.currentItem = slot;
-				offsets();
-				for(int i = -3; i < 4; i++) {
-					for(int j = -3; j < 4; j++) {
-						for(int k = -3; k < 4; k++) {
-							
-							int pX = (int)mc.thePlayer.posX + offsetX;
-							int pY = (int)mc.thePlayer.posY;
-							int pZ = (int)mc.thePlayer.posZ + offsetZ;
-							
-							int x = pX - pX % (int)Client.settingsmanager.getSettingByName("Frequency").getValDouble() - i * (int)Client.settingsmanager.getSettingByName("Frequency").getValDouble();
-							int y = pY + k;
-							int z = pZ - pZ % (int)Client.settingsmanager.getSettingByName("Frequency").getValDouble() - j * (int)Client.settingsmanager.getSettingByName("Frequency").getValDouble();
-							if(mc.thePlayer.getDistance(x, y, z) <= 4) {
-								if(!mc.theWorld.getBlockMaterial(x, y, z).isSolid() && !mc.theWorld.getBlockMaterial(x, y+1, z).equals(Material.tnt) && !mc.theWorld.getBlockMaterial(x, y-1, z).equals(Material.tnt)) {
-									int[] values = getPlace(new Vec3(Vec3.fakePool, x, y, z));
+				if(mc.thePlayer.inventory.getCurrentItem().itemID == 46) {
+					offsets();
+					for(int i = -3; i < 4; i++) {
+						for(int j = -3; j < 4; j++) {
+							for(int k = -3; k < 4; k++) {
 								
-									if(!(values[0] == 0 && values[1] == 0 && values[2] == 0 && values[3] == 0)) {
-										mc.thePlayer.swingItem();
-										mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem(), values[0], values[1], values[2], values[3], new Vec3(Vec3.fakePool, x, y, z));
+								int pX = (int)mc.thePlayer.posX + offsetX;
+								int pY = (int)mc.thePlayer.posY;
+								int pZ = (int)mc.thePlayer.posZ + offsetZ;
+								
+								int x = pX - pX % (int)Client.settingsmanager.getSettingByName("Frequency").getValDouble() - i * (int)Client.settingsmanager.getSettingByName("Frequency").getValDouble();
+								int y = pY + k;
+								int z = pZ - pZ % (int)Client.settingsmanager.getSettingByName("Frequency").getValDouble() - j * (int)Client.settingsmanager.getSettingByName("Frequency").getValDouble();
+								if(mc.thePlayer.getDistance(x, y, z) <= 4) {
+									if(!mc.theWorld.getBlockMaterial(x, y, z).isSolid() && !mc.theWorld.getBlockMaterial(x, y+1, z).equals(Material.tnt) && !mc.theWorld.getBlockMaterial(x, y-1, z).equals(Material.tnt)) {
+										int[] values = getPlace(new Vec3(Vec3.fakePool, x, y, z));
+									
+										if(!(values[0] == 0 && values[1] == 0 && values[2] == 0 && values[3] == 0)) {
+											mc.thePlayer.swingItem();
+											mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem(), values[0], values[1], values[2], values[3], new Vec3(Vec3.fakePool, x, y, z));
+										}
 									}
 								}
 							}

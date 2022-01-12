@@ -36,7 +36,8 @@ public class Freecam extends Module{
 	
 	public void onDisable() {
 		mc.thePlayer.setPosition(x, y, z);
-		mc.theWorld.removeEntity(ent);
+		if(ent != null)
+			mc.theWorld.removeEntity(ent);
 		mc.thePlayer.noClip = false;
 	}
 	public void onEnable() {

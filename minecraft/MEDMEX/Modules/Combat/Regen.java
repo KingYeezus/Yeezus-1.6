@@ -26,6 +26,9 @@ public class Regen extends Module{
 		instance = this;
 	}
 	
+	public void setup() {
+		Client.settingsmanager.rSetting(new Setting("Packets", this, 500, 0, 10000, true));
+	}
 	
 	public static boolean ishealing = false;
 	
@@ -38,7 +41,7 @@ public class Regen extends Module{
 					(new Thread(){
 						public void run() {
 							Regen.this.isHealing = true;
-							for (short s = 0; s <= 500; s = (short)(s + 1))
+							for (short s = 0; s <= Client.settingsmanager.getSettingByName("Packets").getValDouble(); s = (short)(s + 1))
 								Client.sendPacket(new Packet10Flying(mc.thePlayer.onGround));
 							Regen.this.isHealing = false;
 						}

@@ -36,6 +36,7 @@ public class CommandManager {
 		commands.add(new PacketCancel());
 		commands.add(new PacketLogger());
 		commands.add(new Attribute());
+		commands.add(new Macro());
 	}
 	
 	public void handleChat(EventChat event) {

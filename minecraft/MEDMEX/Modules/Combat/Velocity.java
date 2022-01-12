@@ -6,9 +6,11 @@ import org.lwjgl.input.Keyboard;
 
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityLiving;
+import net.minecraft.src.Explosion;
 import net.minecraft.src.Packet102WindowClick;
 import net.minecraft.src.Packet10Flying;
 import net.minecraft.src.Packet28EntityVelocity;
+import net.minecraft.src.Packet60Explosion;
 import MEDMEX.Event.EventPacket;
 import MEDMEX.Modules.Module;
 
@@ -30,6 +32,12 @@ public class Velocity extends Module{
 						e.setCancelled(true);
 					}
 				}
+				if(e.getPacket() instanceof Packet60Explosion) {
+					Packet60Explosion packet = (Packet60Explosion)e.getPacket();
+						e.setCancelled(true);
+					
+				}
+				
 			}
 				
 			}

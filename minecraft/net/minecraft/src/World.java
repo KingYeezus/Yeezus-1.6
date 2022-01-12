@@ -18,7 +18,7 @@ public abstract class World implements IBlockAccess
     public boolean scheduledUpdatesAreImmediate;
 
     /** A list of all Entities in all currently-loaded chunks */
-    public List loadedEntityList = new ArrayList();
+    public List<Entity> loadedEntityList = new ArrayList();
     protected List unloadedEntityList = new ArrayList();
 
     /** A list of all TileEntities in all currently-loaded chunks */
@@ -29,7 +29,7 @@ public abstract class World implements IBlockAccess
     private List entityRemoval = new ArrayList();
 
     /** Array list of players in the world. */
-    public List playerEntities = new ArrayList();
+    public List<EntityPlayer> playerEntities = new ArrayList();
 
     /** a list of all the lightning entities */
     public List weatherEffects = new ArrayList();

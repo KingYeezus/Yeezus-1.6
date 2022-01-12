@@ -2,6 +2,7 @@ package net.minecraft.src;
 
 import com.google.common.base.Charsets;
 
+import MEDMEX.Modules.Render.NewChunks;
 import MEDMEX.UI.MainMenu;
 
 import java.io.BufferedReader;
@@ -594,6 +595,11 @@ public class NetClientHandler extends NetHandler
 
         if (var2 != null)
         {
+        	
+        	if(NewChunks.instance.isEnabled())
+        		NewChunks.renderChunks.add(var2);
+        	
+        	
             var2.fillChunk(par1Packet51MapChunk.getCompressedChunkData(), par1Packet51MapChunk.yChMin, par1Packet51MapChunk.yChMax, par1Packet51MapChunk.includeInitialize);
             this.worldClient.markBlockRangeForRenderUpdate(par1Packet51MapChunk.xCh << 4, 0, par1Packet51MapChunk.zCh << 4, (par1Packet51MapChunk.xCh << 4) + 15, 256, (par1Packet51MapChunk.zCh << 4) + 15);
 
