@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import MEDMEX.Modules.Movement.NoSlow;
+
 public abstract class EntityPlayer extends EntityLivingBase implements ICommandSender
 {
     /** Inventory of the player */
@@ -1190,10 +1192,12 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
                     {
                         if (var3 > 0)
                         {
+                        	if(!NoSlow.instance.isEnabled()) {
                             par1Entity.addVelocity((double)(-MathHelper.sin(this.rotationYaw * (float)Math.PI / 180.0F) * (float)var3 * 0.5F), 0.1D, (double)(MathHelper.cos(this.rotationYaw * (float)Math.PI / 180.0F) * (float)var3 * 0.5F));
                             this.motionX *= 0.6D;
                             this.motionZ *= 0.6D;
                             this.setSprinting(false);
+                        	}
                         }
 
                         if (var5)

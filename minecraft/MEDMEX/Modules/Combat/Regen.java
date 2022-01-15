@@ -44,6 +44,7 @@ public class Regen extends Module{
 							for (short s = 0; s <= Client.settingsmanager.getSettingByName("Packets").getValDouble(); s = (short)(s + 1))
 								Client.sendPacket(new Packet10Flying(mc.thePlayer.onGround));
 							Regen.this.isHealing = false;
+							
 						}
 				}).start();
 			}			

@@ -21,7 +21,7 @@ public class AntiHunger extends Module {
 	
 	public void onEvent(Event e) {
 		if(e instanceof EventUpdate && e.isPre()) {
-			  if (mc.thePlayer.fallDistance > 0 || mc.playerController.isHittingBlock)
+			  if (mc.thePlayer.fallDistance > 0 || mc.playerController.isHittingBlock || mc.thePlayer.isSwingInProgress)
 	            {
 				  EntityClientPlayerMP.spoofong = true;
 	            }else {

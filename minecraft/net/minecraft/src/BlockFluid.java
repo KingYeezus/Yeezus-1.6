@@ -163,9 +163,11 @@ public abstract class BlockFluid extends Block
      */
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
     {
-    	if(!Jesus.instance.isEnabled() || Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().thePlayer.fallDistance >= 3 || Minecraft.getMinecraft().thePlayer.motionY > 0.09) return NULL_AABB;
-        AxisAlignedBB box = (new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D));
-        return box;
+    	if(Jesus.instance.isEnabled())
+        return AxisAlignedBB.getAABBPool().getAABB((double) par2 + this.minX, (double) par3 + this.minY, (double) par4 + this.minZ, (double) par2 + this.maxX, (double) par3 + this.maxY - 0.001, (double) par4 + this.maxZ);
+    	
+    	return new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
+        
     }
 
     /**

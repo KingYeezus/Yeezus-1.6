@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import MEDMEX.Client;
+import MEDMEX.Modules.Render.Search;
 import MEDMEX.Modules.Render.Xray;
 
 public class Block
@@ -469,7 +470,7 @@ public class Block
      * coordinates.  Args: blockAccess, x, y, z, side
      */
     public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
-    {
+    {	
     	if(Xray.instance.isEnabled()) {
     		if(Client.xrayblocks.contains(blockID))
     			return true;
@@ -491,6 +492,13 @@ public class Block
      */
     public Icon getBlockTexture(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
     {
+    	if(Search.instance.isEnabled()) {
+    		if(Search.blockIds.contains(blockID)){
+    			Search.searchBlocks.add(new Vec3(Vec3.fakePool, par2, par3, par4));
+    		}
+    	}
+    	
+    	
         return this.getIcon(par5, par1IBlockAccess.getBlockMetadata(par2, par3, par4));
     }
 

@@ -32,7 +32,7 @@ public abstract class Render
         this.bindTexture(this.getEntityTexture(par1Entity));
     }
 
-    protected void bindTexture(ResourceLocation par1ResourceLocation)
+    public void bindTexture(ResourceLocation par1ResourceLocation)
     {
         this.renderManager.renderEngine.bindTexture(par1ResourceLocation);
     }

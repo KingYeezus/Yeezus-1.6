@@ -56,7 +56,7 @@ public class NoRender extends Module{
 		if(e instanceof EntityAnimal && Client.settingsmanager.getSettingByName("NoRender Animals").getValBoolean()) {
 			return true;
 		}
-		if(e instanceof EntityMob && Client.settingsmanager.getSettingByName("NoRender Monster").getValBoolean()) {
+		if(e instanceof EntityMob && Client.settingsmanager.getSettingByName("NoRender Monsters").getValBoolean()) {
 			return true;
 		}
 		if(e instanceof EntityItem && Client.settingsmanager.getSettingByName("NoRender Items").getValBoolean()) {

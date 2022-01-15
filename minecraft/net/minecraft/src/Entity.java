@@ -1468,6 +1468,11 @@ public abstract class Entity
         return par1 < var3 * var3;
     }
 
+    public Vec3 getPositionVector()
+    {
+        return new Vec3(Vec3.fakePool,this.posX, this.posY, this.posZ);
+    }
+    
     /**
      * Like writeToNBTOptional but does not check if the entity is ridden. Used for saving ridden entities with their
      * riders.

@@ -11,6 +11,7 @@ import net.minecraft.src.EntityItem;
 import net.minecraft.src.EntityMob;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.GuiIngame;
+import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.PlayerControllerMP;
 import net.minecraft.src.RenderGlobal;
@@ -22,6 +23,7 @@ import net.minecraft.src.TileEntityChest;
 import net.minecraft.src.TileEntityFurnace;
 import net.minecraft.src.Vec3;
 import MEDMEX.Modules.Module;
+import MEDMEX.Utils.InventoryUtils;
 import MEDMEX.Utils.RenderUtils;
 
 public class ArmorStatus extends Module{
@@ -48,26 +50,39 @@ public class ArmorStatus extends Module{
 	        ItemStack chest = mc.thePlayer.inventory.armorInventory[2];
 	        ItemStack helmet = mc.thePlayer.inventory.armorInventory[3];
 	        if(helmet != null) {
-	        GuiIngame.itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, helmet, sw / 2 - 91 - 20, sr.getScaledHeight() - 36);
-			GuiIngame.itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.renderEngine, helmet, sw / 2 - 91 - 20, sr.getScaledHeight() - 36);
+	        ItemStack displayhelmet = helmet.copy();
+	        displayhelmet.stackSize = InventoryUtils.getAmountInInventory(helmet.itemID) + 1;
+	        GuiIngame.itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, displayhelmet, sw / 2 - 91 - 20, sr.getScaledHeight() - 36);
+			GuiIngame.itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.renderEngine, displayhelmet, sw / 2 - 91 - 20, sr.getScaledHeight() - 36);
 	        }
 	        if(chest != null) {
-			GuiIngame.itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, chest, sw / 2 - 91 - 20, sr.getScaledHeight() - 20);
-			GuiIngame.itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.renderEngine, chest, sw / 2 - 91 - 20, sr.getScaledHeight() - 20);
+	        ItemStack displaychest = chest.copy();
+	        displaychest.stackSize = InventoryUtils.getAmountInInventory(chest.itemID) + 1;
+			GuiIngame.itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, displaychest, sw / 2 - 91 - 20, sr.getScaledHeight() - 20);
+			GuiIngame.itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.renderEngine, displaychest, sw / 2 - 91 - 20, sr.getScaledHeight() - 20);
 	        }
 	        if(legs != null) {
-			GuiIngame.itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, legs, sw / 2  + 96, sr.getScaledHeight() - 36);
-			GuiIngame.itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.renderEngine, legs, sw / 2 + 96, sr.getScaledHeight() - 36);
+	        ItemStack displaylegs = legs.copy();
+	        displaylegs.stackSize = InventoryUtils.getAmountInInventory(legs.itemID) + 1;
+			GuiIngame.itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, displaylegs, sw / 2  + 96, sr.getScaledHeight() - 36);
+			GuiIngame.itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.renderEngine, displaylegs, sw / 2 + 96, sr.getScaledHeight() - 36);
 	        }
 	        if(boots != null) {
-			GuiIngame.itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, boots,sw / 2 + 96, sr.getScaledHeight() - 20);
-			GuiIngame.itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.renderEngine, boots, sw / 2 + 96, sr.getScaledHeight() - 20);
+	        ItemStack displayboots = boots.copy();
+	        displayboots.stackSize = InventoryUtils.getAmountInInventory(boots.itemID) + 1;
+			GuiIngame.itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, displayboots,sw / 2 + 96, sr.getScaledHeight() - 20);
+			GuiIngame.itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.renderEngine, displayboots, sw / 2 + 96, sr.getScaledHeight() - 20);
 	        }
 			GL11.glDisable(2896 /*GL_LIGHTING*/);
 	        GL11.glDepthMask(true);
 	        GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
+	        
+	       
 		}
 	}
+	
+	
+	
 	
 	
 }

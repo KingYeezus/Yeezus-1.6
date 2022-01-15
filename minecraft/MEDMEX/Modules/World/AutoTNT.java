@@ -29,7 +29,7 @@ public class AutoTNT extends Module{
 				int slot = InventoryUtils.getHotbarslotItem(46);
 				if(slot != -1)
 					mc.thePlayer.inventory.currentItem = slot;
-				if(mc.thePlayer.inventory.getCurrentItem().itemID == 46) {
+				if(mc.thePlayer.getHeldItem() != null && mc.thePlayer.inventory.getCurrentItem().itemID == 46) {
 					offsets();
 					for(int i = -3; i < 4; i++) {
 						for(int j = -3; j < 4; j++) {

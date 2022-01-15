@@ -7,6 +7,7 @@ import org.lwjgl.input.Keyboard;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityAnimal;
 import net.minecraft.src.EntityClientPlayerMP;
+import net.minecraft.src.EntityFireball;
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.EntityMob;
 import net.minecraft.src.EntityPlayer;
@@ -110,6 +111,8 @@ public class KillAura extends Module{
 			return true;
 		if(e instanceof EntityMob && Client.settingsmanager.getSettingByName("Monsters").getValBoolean())
 			return true;
+		if(e instanceof EntityFireball)
+			return true;
 		return false;
 	}
 	
@@ -133,8 +136,8 @@ public class KillAura extends Module{
         EntityClientPlayerMP.customyaw = yaw;
         EntityClientPlayerMP.custompitch = pitch;
         
-        if(prevTarget == null || prevTarget != ent)
-        	Client.sendPacket(new Packet12PlayerLook(yaw, pitch, mc.thePlayer.onGround));
+        //if(prevTarget == null || prevTarget != ent)
+        	//Client.sendPacket(new Packet12PlayerLook(yaw, pitch, mc.thePlayer.onGround));
         prevTarget = ent;
        
     }
@@ -167,9 +170,8 @@ public class KillAura extends Module{
 		mc.thePlayer.swingItem();
 		if(Client.settingsmanager.getSettingByName("Criticals").getValBoolean()) {
 			if(!mc.thePlayer.isInWater() && !mc.thePlayer.isInsideOfMaterial(Material.web) && !mc.thePlayer.isInsideOfMaterial(Material.lava) && mc.thePlayer.onGround) {
-				mc.thePlayer.motionY = 0.10000000149011612D;
-				mc.thePlayer.fallDistance = 1;
-				mc.thePlayer.onGround = false;
+				mc.thePlayer.motionY = 0.3425;
+			
 			}
 		}
 		mc.playerController.attackEntity(mc.thePlayer, e);

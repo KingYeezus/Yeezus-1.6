@@ -1,6 +1,7 @@
 package MEDMEX.Modules.Client;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -9,7 +10,10 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.GameSettings;
+import net.minecraft.src.I18n;
 import net.minecraft.src.Minecraft;
+import net.minecraft.src.Potion;
+import net.minecraft.src.PotionEffect;
 import net.minecraft.src.ScaledResolution;
 import net.minecraft.src.TcpConnection;
 import MEDMEX.Client;
@@ -28,8 +32,9 @@ public class HUD extends Module{
 	public void setup() {
 		Client.settingsmanager.rSetting(new Setting("ArrayList", this, true));
 		Client.settingsmanager.rSetting(new Setting("Watermark", this, true));
-		Client.settingsmanager.rSetting(new Setting("ServerTimeout", this, false));
-		Client.settingsmanager.rSetting(new Setting("Coords", this, false));
+		Client.settingsmanager.rSetting(new Setting("ServerTimeout", this, true));
+		Client.settingsmanager.rSetting(new Setting("PotionHUD", this, true));
+		Client.settingsmanager.rSetting(new Setting("Coords", this, true));
 		ArrayList<String> options = new ArrayList<>();
 		options.add("Horizontal");
 		options.add("Vertical");
@@ -107,6 +112,31 @@ public class HUD extends Module{
 				count++;
 				
 				
+			}
+		}
+		
+		
+		if(Client.settingsmanager.getSettingByName("PotionHUD").getValBoolean()) {
+			Collection<PotionEffect> effects = mc.thePlayer.getActivePotionEffects();
+			int count = 0;
+			for(PotionEffect e : effects) {
+				String eName = I18n.getString(e.getEffectName());
+				String duration = Potion.getDurationString(e);
+				int amp = e.getAmplifier() + 1;
+				
+				String toDraw = "§5" +  eName + "§r §3" + amp + " §9" + duration;
+				
+				if(!GameSettings.showDebugInfo) {
+					if(Client.settingsmanager.getSettingByName("Coords Layout").getValString().equalsIgnoreCase("Horizontal")){
+						mc.fontRenderer.drawStringWithShadow(toDraw, sr.getScaledWidth() - fr.getStringWidth(toDraw) - 4, sr.getScaledHeight() - 20 - (count * 10), -1);
+					}else {
+						mc.fontRenderer.drawStringWithShadow(toDraw, sr.getScaledWidth() - fr.getStringWidth(toDraw) - 4, sr.getScaledHeight() - 40 - (count * 10), -1);
+					}
+				}
+				
+				
+				
+				count++;
 			}
 		}
 		

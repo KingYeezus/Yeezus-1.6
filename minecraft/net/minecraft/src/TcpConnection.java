@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.crypto.SecretKey;
 
 import MEDMEX.Client;
+import MEDMEX.Event.EventBound;
 import MEDMEX.Event.EventPacket;
 import net.minecraft.server.MinecraftServer;
 
@@ -161,6 +162,7 @@ public class TcpConnection implements INetworkManager
     public void addToSendQueue(Packet par1Packet)
     {
     	EventPacket packetOut = new EventPacket(par1Packet);
+    	packetOut.setBound(EventBound.OUT);
     	Client.getPacket(packetOut);
         if (packetOut.isCancelled())
             return;
@@ -324,6 +326,7 @@ public class TcpConnection implements INetworkManager
             if (var2 != null)
             {
             	EventPacket packetIn = new EventPacket(var2);
+            	packetIn.setBound(EventBound.IN);
             	Client.getPacket(packetIn);
                 if (packetIn.isCancelled())
                     return var1;

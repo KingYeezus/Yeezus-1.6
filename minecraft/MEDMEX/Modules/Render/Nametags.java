@@ -298,7 +298,7 @@ public class Nametags extends Module {
 	    //GuiIngame.itemRenderer.zLevel = -150.F;
 	    GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
 	    //GlStateManager.enableRescaleNormal();
-	    GuiIngame.itemRenderer.renderItemIntoGUI(mc.fontRenderer, mc.getTextureManager(), item, xOffset, yOffset);
+	    GuiIngame.itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.getTextureManager(), item, xOffset, yOffset);
 	    GuiIngame.itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), item, xOffset, yOffset);
 	    RenderHelper.disableStandardItemLighting();
 	   // GuiIngame.itemRenderer.zLevel = 0.0F;
@@ -306,8 +306,9 @@ public class Nametags extends Module {
 	    GL11.glDisable(2896 /*GL_LIGHTING*/);
 	    GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
 	     GL11.glDisable(3042 /*GL_BLEND*/);
-	    if (enchants)
+	    if (enchants) 
 	      renderEnchantmentText(item, xOffset, yOffset - 17); 
+	    
 	    GL11.glEnable(2896 /*GL_LIGHTING*/);
 	    GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
 	    GL11.glPopMatrix();

@@ -1,7 +1,9 @@
 package net.minecraft.src;
 
 import MEDMEX.Client;
+import MEDMEX.Event.EventType;
 import MEDMEX.Event.listeners.EventChat;
+import MEDMEX.Event.listeners.EventPlayerMove;
 import MEDMEX.Modules.Client.BlockSelection;
 import MEDMEX.Modules.Player.AntiHunger;
 import MEDMEX.Modules.Player.Freecam;
@@ -83,6 +85,15 @@ public class EntityClientPlayerMP extends EntityPlayerSP
     
     public void sendMotionUpdates()
     {
+    	
+    	EventPlayerMove event = new EventPlayerMove(this.posX, this.posY, this.posZ);
+    	event.setType(EventType.PRE);
+    	Client.onEvent(event);
+    	
+    	if(event.isCancelled())
+    		return;
+    	
+    	
     	
     	if(!(mc.currentScreen instanceof GuiContainerCreative) && BlockSelection.selectingblocks) {
     		BlockSelection.selectingblocks = false;

@@ -6,7 +6,7 @@ public class EventPacket {
 	
 	private boolean cancelled;
 	private Packet packet;
-	
+	public EventBound bound;
 	
 	
 	
@@ -14,6 +14,14 @@ public class EventPacket {
 		this.packet = packet;
 	}
 	
+	public EventBound getBound() {
+		return bound;
+	}
+
+	public void setBound(EventBound bound) {
+		this.bound = bound;
+	}
+
 	public Packet getPacket() {
 		return packet;
 	}
@@ -23,5 +31,17 @@ public class EventPacket {
 	public boolean isCancelled() {
 		return cancelled;
 	}
-
+	
+	public boolean isIn() {
+		if(bound == null)
+			return false;
+		return bound == EventBound.IN;
+	}
+	
+	public boolean isOut() {
+		if(bound == null)
+			return false;
+		return bound == EventBound.OUT;
+	}
+	
 }
