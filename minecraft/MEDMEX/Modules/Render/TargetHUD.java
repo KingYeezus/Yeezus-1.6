@@ -4,7 +4,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import MEDMEX.Client;
-import de.Hero.clickgui.util.FontUtil;
 import net.minecraft.src.AbstractClientPlayer;
 import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.EntityPlayer;
@@ -27,6 +26,7 @@ public class TargetHUD extends Module {
 	}
 	
 	public void onRenderGUI() {
+		try {
 		ScaledResolution sr = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 		FontRenderer fr = mc.fontRenderer;
 		if(KillAura.currentTarget != null && mc.currentScreen == null) {
@@ -38,13 +38,15 @@ public class TargetHUD extends Module {
 			GL11.glColor3f(255, 255, 255);
 			Minecraft.getMinecraft().getTextureManager().bindTexture(i.getLocationSkin());
             Gui.drawScaledCustomSizeModalRect(100 + 5,sr.getScaledHeight() -120 + 5, 200, 8, 8, 8, 25, 25, 64.0F, 32.0F);
-            FontUtil.drawString(t.getEntityName(), 103, sr.getScaledHeight() - 87, -1);
+            fr.drawString(t.getEntityName(), 103, sr.getScaledHeight() - 87, -1);
             double percentagehealth = (t.getHealth() / 20.0)*100;
-            FontUtil.drawStringWithShadow(String.format("%.2f",percentagehealth)+"%", 150, sr.getScaledHeight_double() - 100, ColorUtil.getRainbow(4, 0.6f, 1, 1));
+            fr.drawStringWithShadow(String.format("%.2f",percentagehealth)+"%", 150, sr.getScaledHeight_double() - 100, ColorUtil.getRainbow(4, 0.6f, 1, 1));
 			}
 		}
+	}catch(Exception e) {
+		
 	}
-	
+	}
 	
 
 	

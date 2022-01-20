@@ -8,6 +8,8 @@ import net.minecraft.src.ItemBucket;
 import net.minecraft.src.ItemPickaxe;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Minecraft;
+import net.minecraft.src.PotionHelper;
+import net.minecraft.src.ItemPotion;
 
 public class InventoryUtils {
 	
@@ -20,6 +22,18 @@ public class InventoryUtils {
 		}
 		return -1;
 	}
+	
+	public static int getHotbarslotPotion(String potionEffect) {
+		Minecraft mc = Minecraft.getMinecraft();
+		for(int i = 0; i < 9; i++) {
+			ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
+			if(stack != null && PotionHelper.getPotionEffects(stack.getItemDamage(), false) != null && PotionHelper.getPotionEffects(stack.getItemDamage(), false).toString().contains(potionEffect) &&  PotionHelper.getPotionEffects(stack.getItemDamage(), false).toString().contains("Splash: true")) 
+				return i;
+		}
+		return -1;
+	}
+
+	
 	
 	
 	

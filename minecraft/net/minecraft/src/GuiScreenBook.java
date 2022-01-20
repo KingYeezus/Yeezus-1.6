@@ -37,6 +37,7 @@ public class GuiScreenBook extends GuiScreen
     private GuiButton buttonSign;
     private GuiButton buttonFinalize;
     private GuiButton buttonCancel;
+    private GuiButton buttonColor;
 
     public GuiScreenBook(EntityPlayer par1EntityPlayer, ItemStack par2ItemStack, boolean par3)
     {
@@ -92,6 +93,7 @@ public class GuiScreenBook extends GuiScreen
             this.buttonList.add(this.buttonDone = new GuiButton(0, this.width / 2 + 2, 4 + this.bookImageHeight, 98, 20, I18n.getString("gui.done")));
             this.buttonList.add(this.buttonFinalize = new GuiButton(5, this.width / 2 - 100, 4 + this.bookImageHeight, 98, 20, I18n.getString("book.finalizeButton")));
             this.buttonList.add(this.buttonCancel = new GuiButton(4, this.width / 2 + 2, 4 + this.bookImageHeight, 98, 20, I18n.getString("gui.cancel")));
+            this.buttonList.add(this.buttonColor = new GuiButton(69, this.width / 2 - 9, 40 + this.bookImageHeight, 20, 20, "§"));
         }
         else
         {
@@ -237,6 +239,9 @@ public class GuiScreenBook extends GuiScreen
             else if (par1GuiButton.id == 4 && this.editingTitle)
             {
                 this.editingTitle = false;
+            }
+            else if(par1GuiButton.id == 69) {
+            	this.func_74160_b("§");
             }
 
             this.updateButtons();

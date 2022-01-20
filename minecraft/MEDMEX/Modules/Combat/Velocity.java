@@ -36,12 +36,8 @@ public class Velocity extends Module{
 					Packet60Explosion packet = (Packet60Explosion)e.getPacket();
 						e.setCancelled(true);
 					
-				}
-				
-			}
-				
-			}
-				
-			}
-
+				}	
+			}		
+		}			
+	}
 }

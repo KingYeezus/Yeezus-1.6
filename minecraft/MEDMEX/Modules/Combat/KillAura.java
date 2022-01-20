@@ -111,8 +111,6 @@ public class KillAura extends Module{
 			return true;
 		if(e instanceof EntityMob && Client.settingsmanager.getSettingByName("Monsters").getValBoolean())
 			return true;
-		if(e instanceof EntityFireball)
-			return true;
 		return false;
 	}
 	

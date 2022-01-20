@@ -15,7 +15,7 @@ public class HealthFix extends Module {
 
 	
 	public HealthFix() {
-		super("HealthFix", Keyboard.KEY_F19, Category.PLAYER);
+		super("HealthFix", Keyboard.KEY_NONE, Category.PLAYER);
 	}
 	
 	

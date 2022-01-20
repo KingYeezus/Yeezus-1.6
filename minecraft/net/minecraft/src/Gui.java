@@ -1,5 +1,11 @@
 package net.minecraft.src;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+
 import org.lwjgl.opengl.GL11;
 
 public class Gui
@@ -9,7 +15,7 @@ public class Gui
     public static final ResourceLocation icons = new ResourceLocation("textures/gui/icons.png");
     protected float zLevel;
 
-    protected void drawHorizontalLine(int par1, int par2, int par3, int par4)
+    public static void drawHorizontalLine(int par1, int par2, int par3, int par4)
     {
         if (par2 < par1)
         {
@@ -73,6 +79,43 @@ public class Gui
         GL11.glDisable(GL11.GL_BLEND);
     }
     
+    public static void drawRoundedRect(int xCoord, int yCoord, int xSize, int ySize, int colour, String text) {
+        int width = xCoord + xSize;
+        int height = yCoord + ySize;
+
+        // Top rounding
+        Gui.drawRect(xCoord + 1, yCoord, width - 1, height, colour);
+
+        // Middle rect
+        Gui.drawRect(xCoord, yCoord + 1, width, height - 1, colour);
+
+        drawCenteredUnicodeString(text, xCoord + (xSize / 2), yCoord, 0xFFFFFF);
+    }
+    
+    public static void drawCenteredUnicodeString(String text, int xCoord, int yCoord, int colour) {
+        FontRenderer font = Minecraft.getMinecraft().fontRenderer;
+        boolean prevFlag;
+
+        // Remembering unicode flag
+        prevFlag = font.getUnicodeFlag();
+
+        font.setUnicodeFlag(true);
+        font.drawString(text, xCoord - (font.getStringWidth(text) / 2), yCoord, colour);
+        font.setUnicodeFlag(prevFlag);
+    }
+    
+    public static void drawUnicodeString(String text, int x, int y, int color) {
+    	 FontRenderer font = Minecraft.getMinecraft().fontRenderer;
+         boolean prevFlag;
+
+         // Remembering unicode flag
+         prevFlag = font.getUnicodeFlag();
+
+         font.setUnicodeFlag(true);
+         font.drawString(text, x, y, color);
+         font.setUnicodeFlag(prevFlag);
+    }
+    
     
     public void drawModalRectWithCustomSizedTexture(int x, int y, float u, float v, int width, int height, float textureWidth, float textureHeight)
     {
@@ -98,6 +141,31 @@ public class Gui
         var12.addVertexWithUV((double)(x + width), (double)y, 0.0D, (double)((u + (float)uWidth) * var10), (double)(v * var11));
         var12.addVertexWithUV((double)x, (double)y, 0.0D, (double)(u * var10), (double)(v * var11));
         var12.draw();
+    }
+    
+    public static BufferedImage circularize(BufferedImage image)
+    {
+        // Making image circular
+        BufferedImage out = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = out.createGraphics();
+        try {
+            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            graphics.setColor(Color.BLACK); // The color here doesn't really matter
+            graphics.fillOval(0, 0, image.getWidth(), image.getHeight());
+
+            graphics.setComposite(AlphaComposite.SrcIn); // Only paint inside the oval from now on
+            graphics.drawImage(image, 0, 0, null);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+        finally {
+            graphics.dispose();
+        }
+
+        return out;
     }
 
     /**

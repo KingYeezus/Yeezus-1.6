@@ -55,7 +55,7 @@ public class MainMenu extends GuiScreen {
 				
 			
 			
-			this.drawCenteredString(mc.fontRenderer, name, (width/buttons.length) * count + (width/buttons.length)/2 , height - 20, hovered ?  Color.RED.getRGB() : -1);
+			this.drawCenteredString(mc.fontRenderer, name, (width/buttons.length) * count + (width/buttons.length)/2 , height - 20, hovered ? Color.RED.getRGB() : -1);
 			count++;
 		}
 		

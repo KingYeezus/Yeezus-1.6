@@ -38,7 +38,7 @@ public class Scaffold extends Module{
 				double decZ = posZ - Z;		
 				if(decX < 0.3 || decX > 0.7 || decX < -0.7 || decX > -0.3){
 					if(mc.thePlayer.motionX > 0.02) {
-						if(mc.theWorld.isAirBlock(X+offsetX+1, (int)mc.thePlayer.posY - 2, Z+offsetZ)) {
+						if(mc.theWorld.getBlockMaterial(X+offsetX+1, (int)mc.thePlayer.posY - 2, Z+offsetZ).isReplaceable()) {
 							int[] values = getDir(new Vec3(Vec3.fakePool,(double)X+offsetX+1, mc.thePlayer.posY - 2, (double)Z+offsetZ));
 							//rotateToBlock(-90);
 							mc.thePlayer.swingItem();
@@ -46,7 +46,7 @@ public class Scaffold extends Module{
 						}
 					}
 					if(mc.thePlayer.motionX < -0.02) {
-						if(mc.theWorld.isAirBlock(X+offsetX-1, (int)mc.thePlayer.posY - 2, Z+offsetZ)) {
+						if(mc.theWorld.getBlockMaterial(X+offsetX-1, (int)mc.thePlayer.posY - 2, Z+offsetZ).isReplaceable()) {
 							int[] values = getDir(new Vec3(Vec3.fakePool,(double)X+offsetX-1, mc.thePlayer.posY - 2, (double)Z+offsetZ));
 							//rotateToBlock(90);
 							mc.thePlayer.swingItem();
@@ -56,7 +56,7 @@ public class Scaffold extends Module{
 				}
 				if(decZ < 0.3 || decZ > 0.7 || decZ < -0.7 || decZ > -0.3) {
 					if(mc.thePlayer.motionZ > 0.02) {
-						if(mc.theWorld.isAirBlock(X+offsetX, (int)mc.thePlayer.posY - 2, Z+offsetZ+1)) {
+						if(mc.theWorld.getBlockMaterial(X+offsetX, (int)mc.thePlayer.posY - 2, Z+offsetZ+1).isReplaceable()) {
 							int[] values = getDir(new Vec3(Vec3.fakePool,(double)X+offsetX, mc.thePlayer.posY - 2, (double)Z+offsetZ+1));
 							//rotateToBlock(0);
 							mc.thePlayer.swingItem();
@@ -64,7 +64,7 @@ public class Scaffold extends Module{
 						}
 					}
 					if(mc.thePlayer.motionZ < -0.02) {
-						if(mc.theWorld.isAirBlock(X+offsetX, (int)mc.thePlayer.posY - 2, Z+offsetZ-1)) {
+						if(mc.theWorld.getBlockMaterial(X+offsetX, (int)mc.thePlayer.posY - 2, Z+offsetZ-1).isReplaceable()) {
 							int[] values = getDir(new Vec3(Vec3.fakePool,(double)X+offsetX, mc.thePlayer.posY - 2, (double)Z+offsetZ-1));
 							//rotateToBlock(180);
 							mc.thePlayer.swingItem();
@@ -73,7 +73,7 @@ public class Scaffold extends Module{
 					}
 				}
 				
-				if(mc.theWorld.isAirBlock(X+offsetX, Y-2, Z+offsetZ)) {
+				if(mc.theWorld.getBlockMaterial(X+offsetX, Y-2, Z+offsetZ).isReplaceable()) {
 					int[] values = getDir(new Vec3(Vec3.fakePool,(double)X+offsetX, mc.thePlayer.posY - 2, (double)Z+offsetZ));
 					//rotateToBlock(0);
 					mc.thePlayer.swingItem();

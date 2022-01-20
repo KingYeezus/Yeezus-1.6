@@ -1181,6 +1181,9 @@ public class Block
      */
     public float getAmbientOcclusionLightValue(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
+    	if(Xray.instance.isEnabled())
+    		return 1;
+    	
         return par1IBlockAccess.isBlockNormalCube(par2, par3, par4) ? 0.2F : 1.0F;
     }
 

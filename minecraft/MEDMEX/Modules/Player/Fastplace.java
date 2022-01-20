@@ -15,7 +15,7 @@ public class Fastplace extends Module {
 	public static Fastplace instance;
 	
 	public Fastplace() {
-		super("Fastplace", Keyboard.KEY_F19, Category.PLAYER);
+		super("Fastplace", Keyboard.KEY_NONE, Category.PLAYER);
 		instance = this;
 	}
 	

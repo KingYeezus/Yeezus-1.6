@@ -31,7 +31,7 @@ import MEDMEX.Modules.Module;
 
 public class Client {
 	public static int protocolver = 78;
-	public static String name = "Yeezus", version = "4";
+	public static String name = "Yeezus", version = "5";
 	public static CopyOnWriteArrayList<Integer> xrayblocks = new CopyOnWriteArrayList<Integer>();
 	public static CopyOnWriteArrayList<Macro> macros = new CopyOnWriteArrayList<Macro>();
 	public static CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<Module>();
@@ -39,7 +39,6 @@ public class Client {
 	public static CopyOnWriteArrayList<Module> drawn = new CopyOnWriteArrayList<Module>();
 	public static CommandManager commandManager = new CommandManager();
 	public static SettingsManager settingsmanager;
-	public static de.Hero.clickgui.ClickGUI clickgui;
 	
 	public static void startup(){
 		settingsmanager = new SettingsManager();
@@ -97,6 +96,10 @@ public class Client {
 		modules.add(new AutoWalk());
 		modules.add(new FastBow());
 		modules.add(new AutoWither());
+		modules.add(new NoFall());
+		modules.add(new Tower());
+		modules.add(new AutoPot());
+		modules.add(new AutoGapple());
 		try {
 		Config.load();
 		}catch(Exception e) {
@@ -106,9 +109,6 @@ public class Client {
 		ConfigFriends.load();
 		ConfigDrawn.load();
 		ConfigMacro.load();
-		clickgui = new de.Hero.clickgui.ClickGUI();
-		
-		
 		
 		System.out.println("Loading "+ name +" "+ version);
 	}

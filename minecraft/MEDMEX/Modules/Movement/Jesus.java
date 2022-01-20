@@ -88,7 +88,7 @@ public class Jesus extends Module {
 	                for (int z = MathHelper.floor_double(bb.minZ); z < MathHelper.floor_double(bb.maxZ) + 1; z++) {
 	                    final Material block = mc.theWorld.getBlockMaterial(x, y, z);
 	                    if (!(block == Material.air)) {
-	                        if (!(block == Material.water)) {
+	                        if (!(block == Material.water) && !(block == Material.lava)) {
 	                            return false;
 	                        }
 	                        inLiquid = true;
@@ -115,7 +115,7 @@ public class Jesus extends Module {
 	                for (int z = MathHelper.floor_double(bb.minZ); z < MathHelper.floor_double(bb.maxZ + 1.0D); z++) {
 	                    final Material block = mc.theWorld.getBlockMaterial(x, y, z);
 	                    if (block != Material.air) {
-	                        if (!(block == Material.water)) {
+	                        if (!(block == Material.water) && !(block == Material.lava)) {
 	                            return false;
 	                        }
 	                        onLiquid = true;

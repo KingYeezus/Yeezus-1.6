@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.GameSettings;
+import net.minecraft.src.Gui;
 import net.minecraft.src.I18n;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.Potion;
@@ -79,7 +80,7 @@ public class HUD extends Module{
 				mc.fontRenderer.drawStringWithShadow("§aY §r"+Y, sr.getScaledWidth() - fr.getStringWidth("§aZ §r"+Y) - 4, sr.getScaledHeight() - 20, -1);
 				mc.fontRenderer.drawStringWithShadow("§aZ §r"+Z*multiplier+" §5[§r"+(Z/8)*multiplier+"§5]", sr.getScaledWidth() - fr.getStringWidth("§aZ §r"+Z*multiplier+" §5[§r"+(Z/8)*multiplier+"§5]") - 4, sr.getScaledHeight() - 10, -1);
 			}
-		}
+		}	
 		
 		if(Client.settingsmanager.getSettingByName("ServerTimeout").getValBoolean()) {
 			if(TcpConnection.field_74490_x >= 20) {
@@ -91,6 +92,7 @@ public class HUD extends Module{
 		if(Client.settingsmanager.getSettingByName("Watermark").getValBoolean()) {
 			if(!mc.gameSettings.showDebugInfo)
 				mc.fontRenderer.drawStringWithShadow("§a"+Client.name +"§5 b"+Client.version, 4, 4, -1);
+			
 		}
 		
 		
