@@ -8,7 +8,7 @@ import org.lwjgl.input.Keyboard;
 
 import MEDMEX.Client;
 import MEDMEX.Modules.Module;
-import MEDMEX.MyClickGUI.GuiClick;
+import MEDMEX.myClickGUI.GuiClick;
 import de.Hero.settings.Setting;
 
 

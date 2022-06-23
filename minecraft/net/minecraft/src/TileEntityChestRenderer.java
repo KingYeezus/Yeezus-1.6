@@ -1,8 +1,13 @@
 package net.minecraft.src;
 
+import java.awt.Color;
 import java.util.Calendar;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+
+import MEDMEX.Client;
+import MEDMEX.Modules.Render.ChestESP;
+import MEDMEX.Utils.ChamsUtils;
 
 public class TileEntityChestRenderer extends TileEntitySpecialRenderer
 {
@@ -163,6 +168,19 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
             var12 = 1.0F - var12 * var12 * var12;
             var14.chestLid.rotateAngleX = -(var12 * (float)Math.PI / 2.0F);
             var14.renderAll();
+            if(ChestESP.instance.isEnabled() && ChestESP.instance.shouldRenderEntity(par1TileEntityChest)) {
+            	var14.renderAll();
+    	        ChamsUtils.renderOne();
+    	        var14.renderAll();
+    	        ChamsUtils.renderTwo();
+    	        var14.renderAll();
+    	        ChamsUtils.renderThree();
+    	        Color c =  Client.settingsmanager.getSettingByName("Chest Color").getColor();
+    	        ChamsUtils.renderFour();
+    	        GL11.glColor4f((float)c.getRed() / 255, (float)c.getGreen()/ 255, (float)c.getBlue()/ 255, (float)	c.getAlpha() / 255);
+    	        var14.renderAll();
+    	        ChamsUtils.renderFive();
+            }
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
             GL11.glPopMatrix();
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

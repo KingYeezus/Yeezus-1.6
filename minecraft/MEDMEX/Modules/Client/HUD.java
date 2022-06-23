@@ -8,10 +8,14 @@ import java.util.Comparator;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.src.Block;
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.GameSettings;
 import net.minecraft.src.Gui;
+import net.minecraft.src.GuiIngame;
 import net.minecraft.src.I18n;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.MathHelper;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.Potion;
 import net.minecraft.src.PotionEffect;
@@ -61,29 +65,8 @@ public class HUD extends Module{
 		ScaledResolution sr = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 		FontRenderer fr = mc.fontRenderer;
 		
-		if(Client.settingsmanager.getSettingByName("Coords").getValBoolean()) {
-			int X = (int) mc.thePlayer.posX;
-			int Y = (int) mc.thePlayer.posY;
-			int Z = (int) mc.thePlayer.posZ;
-			
-			if(mc.thePlayer.dimension == -1)
-				multiplier = 8;
-			else
-				multiplier = 1;
-			
-			
-			if(Client.settingsmanager.getSettingByName("Coords Layout").getValString().equalsIgnoreCase("Horizontal")){
-				mc.fontRenderer.drawStringWithShadow("§aXYZ §r"+X*multiplier+" "+Y+" "+Z*multiplier+" §5[§r"+(X/8)*multiplier+" "+(Z/8)*multiplier+"§5]", sr.getScaledWidth() - fr.getStringWidth("§aXYZ §r"+X*multiplier+" "+Y+" "+Z*multiplier+" §5[§r"+(X/8)*multiplier+" "+(Z/8)*multiplier+"§5]") - 4, sr.getScaledHeight() - 10, -1);
-			}
-			if(Client.settingsmanager.getSettingByName("Coords Layout").getValString().equalsIgnoreCase("Vertical")){
-				mc.fontRenderer.drawStringWithShadow("§aX §r"+X*multiplier+" §5[§r"+(X/8)*multiplier+"§5]", sr.getScaledWidth() - fr.getStringWidth("§aX §r"+X*multiplier+" §5[§r"+(X/8)*multiplier+"§5]") - 4, sr.getScaledHeight() - 30, -1);
-				mc.fontRenderer.drawStringWithShadow("§aY §r"+Y, sr.getScaledWidth() - fr.getStringWidth("§aZ §r"+Y) - 4, sr.getScaledHeight() - 20, -1);
-				mc.fontRenderer.drawStringWithShadow("§aZ §r"+Z*multiplier+" §5[§r"+(Z/8)*multiplier+"§5]", sr.getScaledWidth() - fr.getStringWidth("§aZ §r"+Z*multiplier+" §5[§r"+(Z/8)*multiplier+"§5]") - 4, sr.getScaledHeight() - 10, -1);
-			}
-		}	
-		
 		if(Client.settingsmanager.getSettingByName("ServerTimeout").getValBoolean()) {
-			if(TcpConnection.field_74490_x >= 20) {
+			if(TcpConnection.field_74490_x >= 40) {
 				double time = (double)TcpConnection.field_74490_x / 20;
 				mc.fontRenderer.drawCenteredString(fr, "Server has been frozen for: "+String.format("%.1f", time)+"s", sr.getScaledWidth() / 2, 10, 16777215);
 			}
@@ -91,7 +74,9 @@ public class HUD extends Module{
 		
 		if(Client.settingsmanager.getSettingByName("Watermark").getValBoolean()) {
 			if(!mc.gameSettings.showDebugInfo)
-				mc.fontRenderer.drawStringWithShadow("§a"+Client.name +"§5 b"+Client.version, 4, 4, -1);
+			{
+				drawRainbowString(Client.name, 4, 4);
+			}
 			
 		}
 		
@@ -142,9 +127,38 @@ public class HUD extends Module{
 			}
 		}
 		
+		int x = (int)mc.thePlayer.posX;
+		int y = (int)mc.thePlayer.posY;
+		int z = (int)mc.thePlayer.posZ;
+		
+		
+		if(Client.settingsmanager.getSettingByName("Coords").getValBoolean()) {
+			
+			GL11.glScalef(0.7f, 0.7f, 1);
+			drawRainbowString("X:", 4 * 1.428577f, 35);
+			fr.drawStringWithShadow(x+"", 22, 35,  0xb0b0b0);
+			drawRainbowString("Y:", 4 * 1.428577f, 45);
+			fr.drawStringWithShadow(y+"", 22, 45,  0xb0b0b0);
+			drawRainbowString("Z:", 4 * 1.428577f, 55);
+			fr.drawStringWithShadow(z+"", 22, 55,  0xb0b0b0);
+			GL11.glScalef(1.428577f, 1.428577f, 1);
+		}
 		
 		
 		
+		
+	}
+	
+	public void drawRainbowString(String s, double x, double y)
+	{
+		FontRenderer fr = mc.fontRenderer;
+		for (int i = 0; i < s.length(); i++)
+		{	
+			if (i == 0)
+				mc.fontRenderer.drawStringWithShadow(String.valueOf(s.charAt(i)), x, y, ColorUtil.getRainbow(2, 0.6f, 1, i * -100));
+			else
+				mc.fontRenderer.drawStringWithShadow(String.valueOf(s.charAt(i)), x + fr.getCharWidth(s.charAt(i-1)) * i, y, ColorUtil.getRainbow(2, 0.6f, 1, i * -100));
+		}
 	}
 	
 }

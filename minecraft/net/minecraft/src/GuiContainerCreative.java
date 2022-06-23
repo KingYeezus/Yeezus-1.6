@@ -56,12 +56,14 @@ public class GuiContainerCreative extends InventoryEffectRenderer
      */
     public void updateScreen()
     {
+        if (!this.mc.playerController.isInCreativeMode())
+        {
             this.mc.displayGuiScreen(new GuiInventory(this.mc.thePlayer));
-        
+        }
     }
 
     protected void handleMouseClick(Slot par1Slot, int par2, int par3, int par4)
-    {
+    {	
     	if(BlockSelection.selectingblocks) {
     	if(par1Slot != null) {
     		int blockid = par1Slot.getStack().itemID;
@@ -79,6 +81,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer
     			mc.renderGlobal.loadRenderers();
     			Client.addChatMessage("Added "+blockid+" to Xray");
     		}
+    		return;
     	}
     	}
         this.field_74234_w = true;
@@ -260,7 +263,8 @@ public class GuiContainerCreative extends InventoryEffectRenderer
      */
     public void initGui()
     {
-
+        if (this.mc.playerController.isInCreativeMode())
+        {
             super.initGui();
             this.buttonList.clear();
             Keyboard.enableRepeatEvents(true);
@@ -274,7 +278,11 @@ public class GuiContainerCreative extends InventoryEffectRenderer
             this.setCurrentCreativeTab(CreativeTabs.creativeTabArray[var1]);
             this.field_82324_x = new CreativeCrafting(this.mc);
             this.mc.thePlayer.inventoryContainer.addCraftingToCrafters(this.field_82324_x);
-
+        }
+        else
+        {
+            this.mc.displayGuiScreen(new GuiInventory(this.mc.thePlayer));
+        }
     }
 
     /**
@@ -282,12 +290,13 @@ public class GuiContainerCreative extends InventoryEffectRenderer
      */
     public void onGuiClosed()
     {
-       super.onGuiClosed();
+        super.onGuiClosed();
 
         if (this.mc.thePlayer != null && this.mc.thePlayer.inventory != null)
         {
             this.mc.thePlayer.inventoryContainer.removeCraftingFromCrafters(this.field_82324_x);
         }
+
         Keyboard.enableRepeatEvents(false);
     }
 

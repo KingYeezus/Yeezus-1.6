@@ -175,7 +175,7 @@ public class Chunk
     
     public ChunkPosition getPos() {
         return new ChunkPosition(this.xPosition, 64 ,this.zPosition);
-      }
+    }
 
     /**
      * Returns the ExtendedBlockStorage array for this Chunk.

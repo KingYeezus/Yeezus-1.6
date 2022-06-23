@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 
 import MEDMEX.Client;
 import MEDMEX.Config.Config;
-import MEDMEX.Config.ConfigDrawn;
 import MEDMEX.Config.ConfigFriends;
 import MEDMEX.Config.ConfigMacro;
 import MEDMEX.Config.ConfigWaypoints;
@@ -1133,10 +1132,9 @@ public class Minecraft implements IPlayerUsage
      */
     public void shutdown()
     {
-    	Config.save();
+    	Config.saveConfig();
     	ConfigWaypoints.save();
     	ConfigFriends.save();
-    	ConfigDrawn.save();
     	ConfigMacro.save();
         this.running = false;
     }

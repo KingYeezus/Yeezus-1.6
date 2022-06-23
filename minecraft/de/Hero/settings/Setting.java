@@ -2,6 +2,7 @@ package de.Hero.settings;
 
 
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 //Deine Imports
@@ -29,6 +30,8 @@ public class Setting {
 	private double max;
 	private boolean onlyint = false;
 	
+	private Color color;
+	
 
 	public Setting(String name, MEDMEX.Modules.Module parent, String sval, ArrayList<String> options){
 		this.name = name;
@@ -53,6 +56,14 @@ public class Setting {
 		this.max = max;
 		this.onlyint = onlyint;
 		this.mode = "Slider";
+	}
+	
+	public Setting(String name, MEDMEX.Modules.Module parent, Color color)
+	{
+		this.name = name;
+		this.parent = parent;
+		this.color = color;
+		this.mode = "Color";
 	}
 	
 	public String getName(){
@@ -94,6 +105,15 @@ public class Setting {
 		this.dval = in;
 	}
 	
+	public void setColor(Color color) {
+		this.color = color;
+	}
+	
+	public Color getColor()
+	{
+		return this.color;
+	}
+	
 	public double getMin(){
 		return this.min;
 	}
@@ -112,6 +132,10 @@ public class Setting {
 	
 	public boolean isSlider(){
 		return this.mode.equalsIgnoreCase("Slider") ? true : false;
+	}
+	
+	public boolean isColor() {
+		return this.mode.equalsIgnoreCase("Color") ? true : false;
 	}
 	
 	public boolean onlyInt(){

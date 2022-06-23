@@ -26,7 +26,7 @@ public abstract class NBTBase
      */
     public abstract byte getId();
 
-    protected NBTBase(String par1Str)
+    public NBTBase(String par1Str)
     {
         if (par1Str == null)
         {

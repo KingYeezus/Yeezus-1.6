@@ -1,13 +1,13 @@
 package MEDMEX.myClickGUI;
 
-public class KeybindButton {
+public class DrawnButton {
 	public Module mod;
 	public double minX;
 	public double minY;
 	public double maxX;
 	public double maxY;
 
-	public KeybindButton(Module mod, double minX, double minY, double maxX, double maxY)
+	public DrawnButton(Module mod, double minX, double minY, double maxX, double maxY)
 	{
 		this.mod = mod;
 		this.minX = minX;

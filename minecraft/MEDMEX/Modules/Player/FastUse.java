@@ -36,7 +36,7 @@ public class FastUse extends Module {
 					if(!mc.thePlayer.isUsingItem()) return;
 					ItemStack is = mc.thePlayer.inventory.getCurrentItem();
 					
-						for(int i = 0; i < 900; i++){
+						for(int i = 0; i < 50; i++){
 							if(mc.thePlayer.moveForward == 0 && mc.thePlayer.moveStrafing == 0) {
 							Client.sendPacket(new Packet15Place(-1, -1, -1, 255, mc.thePlayer.inventory.getStackInSlot(mc.thePlayer.inventory.currentItem), 0.0F, 0.0F, 0.0F));
 							mc.thePlayer.sendMotionUpdates();

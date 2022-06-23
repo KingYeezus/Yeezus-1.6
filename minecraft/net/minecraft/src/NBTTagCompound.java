@@ -141,6 +141,7 @@ public class NBTTagCompound extends NBTBase
     {
         this.tagMap.put(par1Str, new NBTTagString(par1Str, par2Str));
     }
+    
 
     /**
      * Stores a new NBTTagByteArray with the given array as data into the map with the given string key.

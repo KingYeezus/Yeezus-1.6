@@ -79,9 +79,42 @@ public class Gui
         GL11.glDisable(GL11.GL_BLEND);
     }
     
-    public static void drawRoundedRect(int xCoord, int yCoord, int xSize, int ySize, int colour, String text) {
-        int width = xCoord + xSize;
-        int height = yCoord + ySize;
+    public static void drawRect(double par0, double par1, double par2, double par3, Color c)
+    {
+        double var5;
+
+        if (par0 < par2)
+        {
+            var5 = par0;
+            par0 = par2;
+            par2 = var5;
+        }
+
+        if (par1 < par3)
+        {
+            var5 = par1;
+            par1 = par3;
+            par3 = var5;
+        }
+        
+        Tessellator var9 = Tessellator.instance;
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glColor4f(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+        var9.startDrawingQuads();
+        var9.addVertex((double)par0, (double)par3, 0.0D);
+        var9.addVertex((double)par2, (double)par3, 0.0D);
+        var9.addVertex((double)par2, (double)par1, 0.0D);
+        var9.addVertex((double)par0, (double)par1, 0.0D);
+        var9.draw();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_BLEND);
+    }
+    
+    public static void drawRoundedRect(double xCoord, double yCoord, int xSize, int ySize, int colour, String text) {
+        double width = xCoord + xSize;
+        double height = yCoord + ySize;
 
         // Top rounding
         Gui.drawRect(xCoord + 1, yCoord, width - 1, height, colour);
@@ -92,7 +125,20 @@ public class Gui
         drawCenteredUnicodeString(text, xCoord + (xSize / 2), yCoord, 0xFFFFFF);
     }
     
-    public static void drawCenteredUnicodeString(String text, int xCoord, int yCoord, int colour) {
+    public static void drawRoundedRect(double xCoord, double yCoord, int xSize, int ySize, Color c, String text) {
+        double width = xCoord + xSize;
+        double height = yCoord + ySize;
+
+        // Top rounding
+        Gui.drawRect(xCoord + 1, yCoord, width - 1, height, c);
+
+        // Middle rect
+        Gui.drawRect(xCoord, yCoord + 1, width, height - 1, c);
+
+        drawCenteredUnicodeString(text, xCoord + (xSize / 2), yCoord, 0xFFFFFF);
+    }
+    
+    public static void drawCenteredUnicodeString(String text, double xCoord, double yCoord, int colour) {
         FontRenderer font = Minecraft.getMinecraft().fontRenderer;
         boolean prevFlag;
 

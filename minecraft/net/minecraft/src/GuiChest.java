@@ -59,7 +59,6 @@ public class GuiChest extends GuiContainer
     			for(int x = 0; x < lowerChestInventory.getSizeInventory(); x++)
     					mc.playerController.windowClick(inventorySlots.windowId, x, 0, 1, mc.thePlayer);
     			}catch(Exception e){
-    		
     		}
     	}
     	if(par1.id == 2) {
@@ -70,8 +69,7 @@ public class GuiChest extends GuiContainer
     		
     		}
     	}  	
-   
-}
+    }
     
     
 }

@@ -35,7 +35,7 @@ public class FastBow extends Module{
 				
 				if(!(is.getItem() instanceof ItemBow)) return;
 					mc.thePlayer.sendMotionUpdates();
-					for(int i = 0; i < 200; i++) {
+					for(int i = 0; i < 50; i++) {
 						Client.sendPacket(new Packet10Flying(true));
 					}
 					if(mc.thePlayer.movementInput.moveForward != 0 || mc.thePlayer.movementInput.moveStrafe != 0) {

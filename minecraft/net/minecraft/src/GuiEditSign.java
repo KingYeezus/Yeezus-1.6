@@ -3,6 +3,8 @@ package net.minecraft.src;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import MEDMEX.Modules.World.AutoSign;
+
 public class GuiEditSign extends GuiScreen
 {
     /**
@@ -51,7 +53,7 @@ public class GuiEditSign extends GuiScreen
 
         if (var1 != null)
         {
-            var1.addToSendQueue(new Packet130UpdateSign(this.entitySign.xCoord, this.entitySign.yCoord, this.entitySign.zCoord, this.entitySign.signText));
+            var1.addToSendQueue(new Packet130UpdateSign(this.entitySign.xCoord, this.entitySign.yCoord, this.entitySign.zCoord, AutoSign.instance.signText));
         }
 
         this.entitySign.setEditable(true);

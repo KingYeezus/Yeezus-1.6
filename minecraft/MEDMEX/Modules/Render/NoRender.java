@@ -47,6 +47,7 @@ public class NoRender extends Module{
         Client.settingsmanager.rSetting(new Setting("NoRender Items", this, false));
         Client.settingsmanager.rSetting(new Setting("NoRender Vehicles", this, false));
         Client.settingsmanager.rSetting(new Setting("NoRender XP", this, false));
+        Client.settingsmanager.rSetting(new Setting("NoRender Signs", this, false));
 	}
 	
 	public static boolean shouldNotRender(Entity e) {

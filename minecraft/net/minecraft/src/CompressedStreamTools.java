@@ -37,6 +37,32 @@ public class CompressedStreamTools
 
         return var2;
     }
+    
+    public static byte[] writeUncompressed(NBTTagCompound par0NBTTagCompound) throws IOException {
+		ByteArrayOutputStream var1 = new ByteArrayOutputStream();
+		DataOutputStream var2 = new DataOutputStream(var1);
+
+		try {
+			write(par0NBTTagCompound, var2);
+		} finally {
+			var2.close();
+		}
+
+		return var1.toByteArray();
+	}
+    
+    public static NBTTagCompound readUncompressed(byte[] par0ArrayOfByte) throws IOException {
+		DataInputStream var1 = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(par0ArrayOfByte)));
+		NBTTagCompound var2;
+
+		try {
+			var2 = read(var1);
+		} finally {
+			var1.close();
+		}
+
+		return var2;
+	}
 
     /**
      * Write the compound, gzipped, to the outputstream.

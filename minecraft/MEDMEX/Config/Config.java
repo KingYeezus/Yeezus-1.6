@@ -8,116 +8,104 @@ import java.io.IOException;
 
 import MEDMEX.Client;
 import MEDMEX.Utils.ModuleUtils;
+import MEDMEX.Utils.StorageUtils;
+import de.Hero.settings.Setting;
+import net.minecraft.src.NBTBase;
+import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.NBTTagList;
 import MEDMEX.Modules.Module;
 
 
 public class Config {
 	
-	static String filedir = Client.name + "\\";
-	static String configfiledir = Client.name+"\\config";
-	public static String input = "config";
-	
-	public static void load(){
-		String config = Client.name+"\\"+input;
-		createFiles();
-		//Dont forget to put it in Client.startup
-		try {
-			System.out.println(config);
-			String module = "";
-			BufferedReader reader = new BufferedReader(new FileReader(new File(config)));
-			while((module = reader.readLine()) != null){
-				String name = module.split(":")[0];
-				String keyCode = module.split(":")[1];
-				String state = module.split(":")[2].toLowerCase();
-				
-				Module m = ModuleUtils.getModuleByName(name);
-				
-				if(Client.settingsmanager.getSettingsByMod(m) != null) {
-					for(int i = 0; i < Client.settingsmanager.getSettingsByMod(m).size(); i++) {
-						if(Client.settingsmanager.getSettingsByMod(m).get(i).isCheck()) {
-							String sb = module.split(":")[3+i];
-							Boolean b = Boolean.valueOf(sb);
-							Client.settingsmanager.getSettingsByMod(m).get(i).setValBoolean(b);
-						}
-						if(Client.settingsmanager.getSettingsByMod(m).get(i).isSlider()) {
-							String sd = module.split(":")[3+i];
-							Double d = Double.valueOf(sd);
-							Client.settingsmanager.getSettingsByMod(m).get(i).setValDouble(d);
-						}
-						if(Client.settingsmanager.getSettingsByMod(m).get(i).isCombo()) {
-							String s = module.split(":")[3+i];
-							Client.settingsmanager.getSettingsByMod(m).get(i).setValString(s);
-						}
-					}
-				}
-				
-				ModuleUtils.getModuleByName(name).keyCode.code = Integer.parseInt(keyCode);
-				if(Boolean.parseBoolean(state)){
-					if(!ModuleUtils.getModuleByName(name).isEnabled()){
-						ModuleUtils.getModuleByName(name).toggle();
-					}
-				}else{
-					if(ModuleUtils.getModuleByName(name).isEnabled()){
-						ModuleUtils.getModuleByName(name).toggle();
-					}
+	public static void loadConfig()
+	{
+		NBTTagCompound cfg = StorageUtils.ClientConfig;
+		
+		if(cfg == null)
+			return;
+		
+		 NBTTagList var1 = cfg.getTagList("Modules");
+			 
+		for (int i = 0; i < var1.tagCount(); i++)
+		{
+			NBTTagCompound tags = (NBTTagCompound)var1.tagAt(i);
+			Module mod = Client.getModuleByName(tags.getString("Name"));
+			if (tags.getBoolean("Enabled"))
+				mod.toggle();
+			mod.keyCode.setKeyCode(tags.getInteger("Key"));
+			if (!tags.getBoolean("Drawn"))
+				Client.drawn.add(mod);
+			if (Client.settingsmanager.getSettingsByMod(mod) != null)
+			{
+				for (Setting s : Client.settingsmanager.getSettingsByMod(mod))
+				{
+					 if (s.isCheck())
+					 {
+						 s.setValBoolean(tags.getBoolean(s.getName()));
+					 }
+					 
+					 if (s.isSlider())
+					 {
+						 s.setValDouble(tags.getDouble(s.getName()));
+					 }
+					 
+					 if (s.isCombo())
+					 {
+						 s.setValString(tags.getString(s.getName()));
+					 }
 				}
 			}
-			reader.close();
-		}	catch(IOException e) {
-					e.printStackTrace();
-				}
+		}
 	}
 	
-	public static void save(){
-		String config = Client.name+"\\"+input;
-		createFiles();
-		//Dont forget to put it in Minecraft.shutdown
+	public static void saveConfig()
+	{
+		NBTTagList var1 = new NBTTagList();
+		for (Module m : Client.modules)
+		{
+			 NBTTagCompound module = new NBTTagCompound();
+			 module.setString("Name", m.name);
+			 module.setInteger("Key", m.getKey());
+			 module.setBoolean("Enabled", m.isEnabled());
+			 module.setBoolean("Drawn", Client.drawn.contains(m) ? false : true);
+			 if (Client.settingsmanager.getSettingsByMod(m) != null)
+			 {
+				 for (Setting s : Client.settingsmanager.getSettingsByMod(m))
+				 {
+					 if (s.isCheck())
+					 {
+						 module.setBoolean(s.getName(), s.getValBoolean());
+					 }
+					 
+					 if (s.isSlider())
+					 {
+						 module.setDouble(s.getName(), s.getValDouble());
+					 }
+					 
+					 if (s.isCombo())
+					 {
+						 module.setString(s.getName(), s.getValString());
+					 }
+					 
+					 if (s.isColor())
+					 {
+						 int[] c = new int[4];
+						 c[0] = s.getColor().getRed();
+						 c[1] = s.getColor().getGreen();
+						 c[2] = s.getColor().getBlue();
+						 c[3] = s.getColor().getAlpha();
+						 module.setIntArray(s.getName(), c);
+					 }
+				 }
+			 }
+			 var1.appendTag(module);
 		
-		try(FileWriter writer = new FileWriter(new File(config), false))
-        {
-			for(Module m : Client.modules){
-				if(Client.settingsmanager.getSettingsByMod(m) != null) {
-					writer.write(m.name + ":" + m.keyCode.code + ":" + m.isEnabled());
-					for(int i = 0; i < Client.settingsmanager.getSettingsByMod(m).size(); i++) {
-						if(Client.settingsmanager.getSettingsByMod(m).get(i).isCheck()) {
-							writer.write(":"+Client.settingsmanager.getSettingsByMod(m).get(i).getValBoolean());
-						}
-						if(Client.settingsmanager.getSettingsByMod(m).get(i).isSlider()) {
-							writer.write(":"+Client.settingsmanager.getSettingsByMod(m).get(i).getValDouble());
-						}
-						if(Client.settingsmanager.getSettingsByMod(m).get(i).isCombo()) {
-							writer.write(":"+Client.settingsmanager.getSettingsByMod(m).get(i).getValString());
-						}
-					}
-					writer.write("\n");
-				}else {
-					writer.write(m.name + ":" + m.keyCode.code + ":" + m.isEnabled() + "\n");
-				}
-					
-				}
-			
-			
-            writer.flush();
-            writer.close();
-        }
-        catch(IOException ex){
-             
-            System.out.println(ex.getMessage());
-        } 
-	}
-	
-	public static void createFiles(){
-		if(!new File(filedir).exists()){
-			new File(filedir).mkdir();
 		}
+		 NBTTagCompound var5 = StorageUtils.ClientConfig;
+         var5.setTag("Modules", var1);
 		
-		if(!new File(configfiledir).exists()){
-			try {
-			new File(configfiledir).createNewFile();
-			} catch (IOException e){
-				e.printStackTrace();
-			}
-		}
+		StorageUtils.saveConfig();
 	}
 	
 

@@ -1,384 +1,450 @@
-package MEDMEX.MyClickGUI;
-
-import java.awt.image.BufferedImage;
-import java.util.Locale.Category;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Future;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
+package MEDMEX.myClickGUI;
 
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.Gui;
 import net.minecraft.src.GuiScreen;
-import net.minecraft.src.ResourceLocation;
+import net.minecraft.src.GuiTextField;
 import net.minecraft.src.ScaledResolution;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
+
 import MEDMEX.Client;
 import MEDMEX.Modules.Module;
 import de.Hero.settings.Setting;
 
 public class GuiClick extends GuiScreen{
-	 
-	int currentCategory = 0;
-	int oldsrh = 0; int oldsrw = 0;
-	int currentscroll = 0;
-	int oldscroll = 0;
-	int lastCategory = 0;
-	MEDMEX.Modules.Module.Category oldc = Module.Category.CLIENT;
-	public static CopyOnWriteArrayList<ToggleButton> toggleButtons = new CopyOnWriteArrayList<ToggleButton>();
-	public static CopyOnWriteArrayList<CategoryButton> cButtons = new CopyOnWriteArrayList<CategoryButton>();
-	public static CopyOnWriteArrayList<SettingButton> settingButtons = new CopyOnWriteArrayList<SettingButton>();
-	public static CopyOnWriteArrayList<ToggleSettingButton> toggleSettingButtons= new CopyOnWriteArrayList<ToggleSettingButton>();
-	public static CopyOnWriteArrayList<SliderSettingButton> sliderSettingButtons= new CopyOnWriteArrayList<SliderSettingButton>();
-	public static CopyOnWriteArrayList<ComboSettingButton> comboSettingButtons= new CopyOnWriteArrayList<ComboSettingButton>();
-	public static CopyOnWriteArrayList<ComboValueSettingButton> combovalueSettingButtons= new CopyOnWriteArrayList<ComboValueSettingButton>();
-	public MEDMEX.Modules.Module activeModule;
-	public static KeybindButton keybindButton;
-	public static ToggleButton drawnButton;
-	public static boolean listenForKeybind = false;
-	boolean sliding = false;
-	Setting currentslider;
+	CopyOnWriteArrayList<Category> categories = new CopyOnWriteArrayList<Category>();
+	CopyOnWriteArrayList<MEDMEX.myClickGUI.Module> modules = new CopyOnWriteArrayList<MEDMEX.myClickGUI.Module>();
+	CopyOnWriteArrayList<BooleanButton>booleanButtons = new CopyOnWriteArrayList<BooleanButton>();
+	CopyOnWriteArrayList<ColorButton>colorButtons = new CopyOnWriteArrayList<ColorButton>();
+	CopyOnWriteArrayList<SliderButton>sliderButtons = new CopyOnWriteArrayList<SliderButton>();
+	CopyOnWriteArrayList<MultiButton>multiButtons = new CopyOnWriteArrayList<MultiButton>();
+	CopyOnWriteArrayList<OptionButton>optionButtons = new CopyOnWriteArrayList<OptionButton>();
+	CopyOnWriteArrayList<StringButton>stringButtons = new CopyOnWriteArrayList<StringButton>();
+	KeybindButton keybindButton;
+	DrawnButton drawnButton;
+	public GuiClick()
+	{
+		listening = false;
+		openSettings = false;
+		
+		sliderButtons.clear();
+		booleanButtons.clear();
+		multiButtons.clear();
+		colorButtons.clear();
+		
+		double xOffset = 0;
+		double minX = 60;
+		double maxX = 145;
+		double minY = 20;
+		double maxY = 35;
+		for (Module.Category c : Module.Category.values())
+		{
+			List<Module> mods = Client.getModuleByCategory(c);
+			Category cat = new Category(c, mods, minX + xOffset, maxX + xOffset, minY, maxY);
+			categories.add(cat);
+			xOffset += 90;
+			
+			double yOffset = 0;
+			for (Module m : cat.modules)
+			{
+				if (Client.getModuleByCategory(cat.c).contains(m))
+				{
+					modules.add(new MEDMEX.myClickGUI.Module(cat, m, cat.minX + 1, cat.maxY + yOffset, cat.maxX - 1, cat.maxY + 10 + yOffset, false));
+					yOffset += 11;
+				}
+			}
+		}
+	}
 	
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		ScaledResolution sr = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) 
+	{
 		FontRenderer fr = mc.fontRenderer;
-		Gui.drawRoundedRect(sr.getScaledWidth() / 2 - 150, 40, 300, 200, 0xff232323, "Yeezus");
-		if(oldsrh != sr.getScaledHeight() || oldsrw != sr.getScaledWidth()) {
-			toggleButtons.clear();
-			cButtons.clear();
-			settingButtons.clear();
-			toggleSettingButtons.clear();
-			sliderSettingButtons.clear();
-			comboSettingButtons.clear();
-			combovalueSettingButtons.clear();
-		}
+		ScaledResolution sr = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
+		Gui.drawRect(0, 0, sr.getScaledWidth(), sr.getScaledHeight(), 0x33232323);
 		
-		if(Mouse.getEventDWheel() > 2)
-			currentscroll++;
-		if(Mouse.getEventDWheel() < -2)
-			currentscroll--;
-		
-		if(currentscroll < 0)
-			currentscroll = 0;
-		
-		
-		for(Module.Category c: Module.Category.values()) {
-			Gui.drawRoundedRect(sr.getScaledWidth() / 2 - 148, 40 + (c.ordinal() * 30) + 12, 26, 25, 0xfff54242, "");
-			CategoryButton cbutton = new CategoryButton(sr.getScaledWidth() / 2 - 148, 40 + (c.ordinal() * 30) + 12, sr.getScaledWidth() / 2 - 122, 40 + (c.ordinal() * 30) + 37, c);
-			if(cButtons.size() < Module.Category.values().length)
-				cButtons.add(cbutton);
-			if(c.ordinal() == currentCategory) {
-				if(oldc != c) {
-					toggleButtons.clear();
-					settingButtons.clear();
-					toggleSettingButtons.clear();
-					sliderSettingButtons.clear();
-					comboSettingButtons.clear();
-					combovalueSettingButtons.clear();
-					activeModule = null;
-				}
-				int i = 0;
-				if(oldscroll != currentscroll) {
-					toggleButtons.clear();
-					settingButtons.clear();
-					toggleSettingButtons.clear();
-					sliderSettingButtons.clear();
-					comboSettingButtons.clear();
-					combovalueSettingButtons.clear();
-				}
-				for(Module m : Client.getModuleByCategory(c)) {
-					if(currentscroll > Client.getModuleByCategory(c).size())
-						currentscroll = 0;
-					int offset = i - currentscroll;
-					if(i >= currentscroll && i <= currentscroll + 10) { 
-					Gui.drawRoundedRect(sr.getScaledWidth() / 2 - 111, 53 + (offset*15), 90, 12, 0xfff54242, "");
-					Gui.drawRect(sr.getScaledWidth() / 2 - 110, 54 + (offset*15), sr.getScaledWidth() / 2 - 22, 64 + (offset*15), 0xff232323);
-					fr.drawStringWithShadow(m.name, sr.getScaledWidth() / 2 - 109, 55 + (offset*15),  0xfff54242);
-
-					Gui.drawRoundedRect(sr.getScaledWidth() / 2 - 18, 53 + (offset*15), 13, 12, 0xfff54242, "");
-					Gui.drawRect(sr.getScaledWidth() / 2 - 17, 54 + (offset*15), sr.getScaledWidth() / 2 - 6, 64 + (offset*15), 0xff232323);
-					
-					if(m.isEnabled())
-						Gui.drawRoundedRect(sr.getScaledWidth() / 2 - 16, 55 + (offset*15), 9, 8, 0xfff54242, "");
-					}
-					SettingButton sButton = new SettingButton(sr.getScaledWidth() / 2 - 110, 54 + (offset*15), sr.getScaledWidth() / 2 - 22, 64 + (offset*15), m);
-					ToggleButton button = new ToggleButton(sr.getScaledWidth() / 2 - 17, 54 + (offset*15), sr.getScaledWidth() / 2 - 6, 64 + (offset*15), m);
-					if(toggleButtons.size() < Client.getModuleByCategory(c).size())
-						toggleButtons.add(button);
-					if(settingButtons.size() < Client.getModuleByCategory(c).size())
-						settingButtons.add(sButton);
-					
-					i++;
-					
-				}
-				oldscroll = currentscroll;
-				oldc = c;
-			}
+		//Rendering Category
+		for (Category cat : categories)
+		{
+			Gui.drawRect(cat.minX, cat.minY, cat.maxX, cat.maxY, 0xcc232323);
+			GL11.glScalef(0.7f, 0.7f, 1);
+			fr.drawStringWithShadow(cat.c.name, (((cat.minX + cat.maxX) / 2) - 35) * 1.42857, ((cat.minY + cat.maxY) / 2 - 2) * 1.42857, -1);
+			GL11.glScalef(1.42857f, 1.42857f, 1);
+			
+			//top
+			Gui.drawRect(cat.minX, cat.minY - 0.5, cat.maxX, cat.minY, 0x40ffffff);
 			
 		}
 		
-		if(activeModule != null) {
-			Gui.drawCenteredUnicodeString(activeModule.name, sr.getScaledWidth() / 2 + 75, 40, -1);
-			Gui.drawRoundedRect(sr.getScaledWidth() / 2 + 20, 53, 40, 12, 0xfff54242, "");
-			Gui.drawRect(sr.getScaledWidth() / 2 + 21, 54, sr.getScaledWidth() / 2 + 59, 64, 0xff232323);
-			fr.drawStringWithShadow("Bind:", sr.getScaledWidth() / 2 + 23, 55, 0xfff54242);
-			
-			Gui.drawRoundedRect(sr.getScaledWidth() / 2 + 90, 53, 50, 12, 0xfff54242, "");
-			Gui.drawRect(sr.getScaledWidth() / 2 + 91, 54, sr.getScaledWidth() / 2 + 139, 64, 0xff232323);
-			if(listenForKeybind)
-				fr.drawStringWithShadow("...", sr.getScaledWidth() / 2 + 92, 55, 0xfff54242);
+		//Rendering Modules in Category
+		for (MEDMEX.myClickGUI.Module m : modules)
+		{
+			Gui.drawRect(m.minX, m.minY, m.maxX, m.maxY, 0xcc232323);
+			GL11.glScalef(0.7f, 0.7f, 1);
+			if(!m.mod.isEnabled())
+				fr.drawStringWithShadow(m.mod.name, (m.minX + 6) * 1.428577, (m.minY + 3) * 1.428577, -1);
 			else
-			fr.drawStringWithShadow(Keyboard.getKeyName(activeModule.getKey()), sr.getScaledWidth() / 2 + 92, 55, 0xfff54242);
+				fr.drawStringWithShadow(m.mod.name, (m.minX + 6) * 1.428577, (m.minY + 3) * 1.428577, 0xcccc00ff);
+			GL11.glScalef(1.42857f, 1.42857f, 1);
 			
-			keybindButton = new KeybindButton(sr.getScaledWidth() / 2 + 91, 54, sr.getScaledWidth() / 2 + 139, 64, activeModule);
+			Gui.drawRect(m.minX, m.maxY, m.maxX, m.maxY + 1, 0x1affffff);
 			
-			Gui.drawRoundedRect(sr.getScaledWidth() / 2 + 20, 68, 40, 12, 0xfff54242, "");
-			Gui.drawRect(sr.getScaledWidth() / 2 + 21, 69, sr.getScaledWidth() / 2 + 59, 79, 0xff232323);
-			fr.drawStringWithShadow("Drawn:", sr.getScaledWidth() / 2 + 23, 70, 0xfff54242);
+			Gui.drawRect(m.minX - 1, m.minY, m.minX, m.maxY + 1, 0x1affffff);
+			Gui.drawRect(m.maxX + 1, m.minY, m.maxX, m.maxY + 1, 0x1affffff);
 			
-			Gui.drawRoundedRect(sr.getScaledWidth() / 2 + 127, 68, 13, 12, 0xfff54242, "");
-			Gui.drawRect(sr.getScaledWidth() / 2 + 128, 69, sr.getScaledWidth() / 2 + 139, 79, 0xff232323);
 			
-			if(!Client.drawn.contains(activeModule)) {
-				Gui.drawRoundedRect(sr.getScaledWidth() / 2 + 129, 70, 9, 8, 0xfff54242, "");
-			}
 			
-			drawnButton = new ToggleButton(sr.getScaledWidth() / 2 + 128, 69, sr.getScaledWidth() / 2 + 139, 79, activeModule);
 			
-			int settingIndex = 0;
-			int toggleAmount = 0;
-			int sliderAmount = 0;
-			int comboAmount = 0;
-			if(Client.settingsmanager.getSettingsByMod(activeModule) != null) {
-				for(Setting s : Client.settingsmanager.getSettingsByMod(activeModule)) {
-					if(s.isCheck()) {
-						toggleAmount++;
-
-						Gui.drawRoundedRect(sr.getScaledWidth() / 2 + 20, 83 + (settingIndex * 15), 78, 12, 0xfff54242, "");
-						Gui.drawRect(sr.getScaledWidth() / 2 + 21, 84 + (settingIndex * 15), sr.getScaledWidth() / 2 + 97, 94 + (settingIndex * 15), 0xff232323);
-						fr.drawStringWithShadow(s.getName(), sr.getScaledWidth() / 2 + 23, 85 + (settingIndex * 15), 0xfff54242);
-						
-						Gui.drawRoundedRect(sr.getScaledWidth() / 2 + 127, 83 + (settingIndex * 15), 13, 12, 0xfff54242, "");
-						Gui.drawRect(sr.getScaledWidth() / 2 + 128, 84 + (settingIndex * 15), sr.getScaledWidth() / 2 + 139, 94 + (settingIndex * 15), 0xff232323);
-						
-						if(s.getValBoolean())
-							Gui.drawRoundedRect(sr.getScaledWidth() / 2 + 129, 85 + (settingIndex * 15), 9, 8, 0xfff54242, "");
+			GL11.glScalef(0.7f, 0.7f, 1);
+			fr.drawStringWithShadow("*", (m.maxX - 6) * 1.42857, (m.minY + 3) * 1.428577, 0xcccc00ff);
+			GL11.glScalef(1.428577f, 1.428577f, 1);
+			
+		}
+		
+		//Rendering Settings menu
+		for (MEDMEX.myClickGUI.Module m : modules)
+		{
+			if (m.settings)
+			{
+				Gui.drawRoundedRect(120, 40, 400, 250, 0xcccc00ff, "");
+				Gui.drawRect(121, 41, 519, 289, 0xff232323);
+				
+				GL11.glScalef(0.7f, 0.7f, 1);
+				fr.drawCenteredString(fr, m.mod.name,(float)(322 * 1.428577),(float)(46 * 1.428577), 0xcccc00ff);
+				GL11.glScalef(1.428577f, 1.428577f, 1);
+				
+				int width = fr.getStringWidth(m.mod.name);
+				
+				Gui.drawRect(322 - (width / 2), 41, 322 - (width / 2) - 1, 57, 0xcccc00ff);
+				Gui.drawRect(322 + (width / 2), 41, 322 + (width / 2) - 1, 57, 0xcccc00ff);
+				Gui.drawRect(322 - (width / 2), 57, 322 + (width / 2) - 1, 58, 0xcccc00ff);
+				
+				fr.drawStringWithShadow("x", 506, 46, 0xcccc00ff);
+				
+				GL11.glScalef(0.7f, 0.7f, 1);
+				fr.drawStringWithShadow("Keybind: ", (keybindButton.minX - 55) * 1.428577f, keybindButton.minY * 1.428577f, 0xcccc00ff);
+				fr.drawStringWithShadow("["+keybindString+"]", keybindButton.minX * 1.428577f, keybindButton.minY * 1.428577f, 0xcccc00ff);
+				
+				fr.drawStringWithShadow("Drawn: ", (drawnButton.minX - 55) * 1.428577f, (drawnButton.minY + 3) * 1.428577f, 0xcccc00ff);
+				for (BooleanButton bb : booleanButtons)
+				{
+					fr.drawStringWithShadow(bb.s.getName(), (bb.minX - 55) * 1.428577f, (bb.minY + 3) * 1.428577f, 0xcccc00ff);
+				}
+				
+				for (SliderButton sb : sliderButtons)
+				{
+					fr.drawStringWithShadow(sb.s.getName(), (sb.minX - 55) * 1.428577f, (sb.minY + 3) * 1.428577f, 0xcccc00ff);
+					fr.drawStringWithShadow(String.format("%.2f", sb.s.getValDouble()), (sb.maxX + 6)  * 1.428577f, (sb.minY + 3) * 1.428577f, 0xcccc00ff);
+				}
+				
+				for (MultiButton mb : multiButtons)
+				{
+					fr.drawStringWithShadow(mb.s.getName(), (mb.minX - 55) * 1.428577f, (mb.minY + 3) * 1.428577f, 0xcccc00ff);
+				}
+				
+				for (ColorButton cb : colorButtons)
+				{
+					fr.drawStringWithShadow(cb.s.getName(), (cb.minX - 55) * 1.428577f, (cb.minY + 3) * 1.428577f, 0xcccc00ff);
+				}
+				
+				GL11.glScalef(1.428577f, 1.428577f, 1);
+				
+				Gui.drawRect(drawnButton.minX, drawnButton.minY, drawnButton.maxX, drawnButton.maxY, 0xcccc00ff);
+				Gui.drawRect(drawnButton.minX + 1, drawnButton.minY + 1, drawnButton.maxX - 1, drawnButton.maxY - 1, 0xff232323);
+				
+				if (!Client.drawn.contains(m.mod))
+				{
+					Gui.drawRoundedRect(drawnButton.minX + 2, drawnButton.minY + 2, 6, 6, 0xcccc00ff, "");
+				}
+				
+				for (BooleanButton bb : booleanButtons)
+				{
+					Gui.drawRect(bb.minX, bb.minY, bb.maxX, bb.maxY, 0xcccc00ff);
+					Gui.drawRect(bb.minX + 1, bb.minY + 1, bb.maxX - 1, bb.maxY - 1, 0xff232323);
 					
-						if(toggleSettingButtons.size() < toggleAmount)
-							toggleSettingButtons.add(new ToggleSettingButton(sr.getScaledWidth() / 2 + 128, 84 + (settingIndex * 15), sr.getScaledWidth() / 2 + 139, 94 + (settingIndex * 15), s));
+					if (bb.s.getValBoolean())
+					{
+						Gui.drawRoundedRect(bb.minX + 2, bb.minY + 2, 6, 6, 0xcccc00ff, "");
 					}
+				}
+				
+				for (SliderButton sb : sliderButtons)
+				{
+					Gui.drawRect(sb.minX, sb.minY + 6, sb.maxX, sb.maxY + 6, 0xcccc00ff);
 					
-					if(s.isSlider()) {
-						sliderAmount++;
-						boolean intonly = s.onlyInt();
-						double min = s.getMin();
-						double max = s.getMax();
-						double currentval = s.getValDouble();
-						
-						double factor = (max - min) / 118;
-						
-						double relative = currentval / factor;
-						
-						Gui.drawRoundedRect(sr.getScaledWidth() / 2 + 20, 83 + (settingIndex * 15), 120, 12, 0xfff54242, "");
-						Gui.drawRect(sr.getScaledWidth() / 2 + 21, 84 + (settingIndex * 15), sr.getScaledWidth() / 2 + 139, 94 + (settingIndex * 15), 0xff232323);
-						
-						if(relative > 118)
-							relative = 118;
-						if(relative < 0)
-							relative = 0;
-						
-						Gui.drawRect(sr.getScaledWidth() / 2 + 21, 84 + (settingIndex * 15), sr.getScaledWidth() / 2 + 21 + relative, 94 + (settingIndex * 15), 0xfff54242);
-						fr.drawStringWithShadow(s.getName(), sr.getScaledWidth() / 2 + 23, 85 + (settingIndex * 15), 0xfff54242);
-						fr.drawCenteredString(fr, String.format("%.2f", currentval).replace(",", "."), sr.getScaledWidth() / 2 + 110, 85 + (settingIndex * 15), 0xfff54242);
+					boolean intonly = sb.s.onlyInt();
+					double min = sb.s.getMin();
+					double max = sb.s.getMax();
+					double currentval = sb.s.getValDouble();
+					double factor = (max - min) / 100;
+					double relative = currentval / factor;
 					
-						if(sliderSettingButtons.size() < sliderAmount)
-							sliderSettingButtons.add(new SliderSettingButton(sr.getScaledWidth() / 2 + 21, 84 + (settingIndex * 15), sr.getScaledWidth() / 2 + 139, 94 + (settingIndex * 15), s));
+					Gui.drawRoundedRect(sb.minX + relative, sb.minY + 4, 5, 5, 0xcccc00ff, "");					
+				}
+				
+				for (MultiButton mb : multiButtons)
+				{
+					Gui.drawRect(mb.minX, mb.minY, mb.maxX, mb.maxY, 0xcccc00ff);
+					Gui.drawRect(mb.minX + 1, mb.minY + 1, mb.maxX - 1, mb.maxY - 1, 0xff232323);
 					
-						if(sliding) {
-							int begin = sr.getScaledWidth() / 2 + 21;
-							int pos = mouseX;
-							int rel = (pos - begin);
-							if(rel < 0)
-								rel = 0;
-							if(rel > 118)
-								rel = 118;
-							if(rel >= 0 && rel <= 118) {
-								double val = currentslider.getMax() / 118 * rel; 
-								currentslider.setValDouble(val);
+					GL11.glScalef(0.7f, 0.7f, 1);
+					if(!mb.show)
+					{
+						fr.drawStringWithShadow("Show", (mb.minX + 15) * 1.428577f, (mb.minY + 2.5) * 1.428577f, 0xcccc00ff);
+					}
+					else
+					{
+						fr.drawStringWithShadow("Hide", (mb.minX + 15) * 1.428577f, (mb.minY + 2.5) * 1.428577f, 0xcccc00ff);
+						
+						double yOffset2 = 0;
+						
+						for (OptionButton ob : optionButtons)
+						{
+							Gui.drawRoundedRect(ob.minX * 1.428577f, (ob.minY) * 1.428577f, 80, 14, 0xcccc00ff, "");
+							Gui.drawRect((ob.minX + 1) * 1.428577f, (ob.minY) * 1.428577f, (ob.minX + 55) * 1.428577f, (ob.minY + 10) * 1.428577f, 0xff232323);
+							fr.drawCenteredString(fr, ob.s, (float)((ob.minX + 28)* 1.428577f), (float)((ob.minY) * 1.428577f), 0xcccc00ff);
+							if (ob.set.getValString().equalsIgnoreCase(ob.s))
+							{
+								Gui.drawRect((ob.minX + 15) * 1.428577f, (ob.maxY - 1) * 1.428577f, (ob.minX + 40) * 1.428577f, (ob.maxY - 2) * 1.428577f, 0xcccc00ff);
 							}
+							
+							yOffset2 += 14;
 						}
 						
 					}
+					GL11.glScalef(1.428577f, 1.428577f, 1);
+				}
+				
+				for (ColorButton cb : colorButtons)
+				{
+					Gui.drawRect(cb.minX, cb.minY, cb.maxX, cb.maxY, 0xcccc00ff);
+					Gui.drawRect(cb.minX + 1, cb.minY + 1, cb.maxX - 1, cb.maxY - 1, 0xff232323);
 					
-					if(s.isCombo()) {
-						comboAmount++;
-						
-						Gui.drawRoundedRect(sr.getScaledWidth() / 2 + 20, 83 + (settingIndex * 15), 78, 12, 0xfff54242, "");
-						Gui.drawRect(sr.getScaledWidth() / 2 + 21, 84 + (settingIndex * 15), sr.getScaledWidth() / 2 + 97, 94 + (settingIndex * 15), 0xff232323);
-						fr.drawStringWithShadow(s.getName(), sr.getScaledWidth() / 2 + 23, 85 + (settingIndex * 15), 0xfff54242);
-						
-						Gui.drawRoundedRect(sr.getScaledWidth() / 2 + 127, 83 + (settingIndex * 15), 13, 12, 0xfff54242, "");
-						Gui.drawRect(sr.getScaledWidth() / 2 + 128, 84 + (settingIndex * 15), sr.getScaledWidth() / 2 + 139, 94 + (settingIndex * 15), 0xff232323);
+					Gui.drawRoundedRect(cb.minX + 2, cb.minY + 2, 6, 6,cb.s.getColor() , "");
 					
+					
+				}
+			}
+		}
+		
+		if (sliding)
+		{
+			double begin = currentSlider.minX;
+			double pos = mouseX;
+			double rel = (pos - begin);
+			if(rel < 0)
+				rel = 0;
+			if(rel > 100)
+				rel = 100;
+			if(rel >= 0 && rel <= 100) {
+				double val = currentSlider.s.getMax() / 100 * rel; 
+				currentSlider.s.setValDouble(val);
+			}
+		}
+	}
+	
+	public boolean openSettings = false;
+	
+	public void mouseClicked(int mouseX, int mouseY, int mouseButton) 
+	{
+		FontRenderer fr = mc.fontRenderer;
+		for (MEDMEX.myClickGUI.Module m : modules)
+		{
+			if (!openSettings)
+			{
+				if (mouseX >= m.minX && mouseX <= m.maxX && mouseY >= m.minY && mouseY <= m.maxY)
+				{
+					if (mouseButton == 0)
+					{
+						m.mod.toggle();
+					}
+					if (mouseButton == 1)
+					{
+						sliderButtons.clear();
+						booleanButtons.clear();
+						multiButtons.clear();
+						optionButtons.clear();
+						colorButtons.clear();
 						
-						for(ComboSettingButton b : comboSettingButtons) {
-							if(b.extended) {
-								fr.drawStringWithShadow("◀", sr.getScaledWidth() / 2 + 132, 85 + (settingIndex * 15), 0xfff54242);
-							
-								Gui.drawRoundedRect(sr.getScaledWidth() / 2 + 155, 40, 80, 200, 0xff232323, s.getName());
-							
-								int combos = 0;
-								
-								for(String combo : s.getOptions()) {
-									Gui.drawRoundedRect(sr.getScaledWidth() / 2 + 160, 55 + (combos * 15), 70, 12, 0xfff54242, "");
-									Gui.drawRect(sr.getScaledWidth() / 2 + 161, 56 + (combos * 15), sr.getScaledWidth() / 2 + 229, 66 + (combos * 15), 0xff232323);
-									
-									if(s.getValString().equals(combo)) 
-										Gui.drawRect(sr.getScaledWidth() / 2 + 161, 56 + (combos * 15), sr.getScaledWidth() / 2 + 229, 66 + (combos * 15), 0xfff54242);
-									
-									fr.drawStringWithShadow(combo, sr.getScaledWidth() / 2 + 163, 57 + (combos * 15), 0xfff54242);
-									
-									if(combovalueSettingButtons.size() < s.getOptions().size())
-										combovalueSettingButtons.add(new ComboValueSettingButton(sr.getScaledWidth() / 2 + 161, 56 + (combos * 15), sr.getScaledWidth() / 2 + 229, 66 + (combos * 15), s, combo));
-									
-									combos++;
+						m.settings = true;
+						openSettings = true;
+						
+						keybindButton = new KeybindButton(m, 180, 50, 190, 60);
+						keybindString = Keyboard.getKeyName(keybindButton.mod.mod.keyCode.code);
+						drawnButton = new DrawnButton(m, 180, 60, 190, 70);
+						
+						ArrayList<Setting> settings = Client.settingsmanager.getSettingsByMod(m.mod);
+						
+						double yOffset = 0;
+						
+						if(settings != null)
+						{
+							for(Setting s : settings)
+							{
+								if (s.isCheck())
+								{
+									booleanButtons.add(new BooleanButton(s, m, 180, 74 + yOffset, 190, 84 + yOffset));
 								}
 								
-							}
-							else {
-								fr.drawStringWithShadow("▶", sr.getScaledWidth() / 2 + 132, 85 + (settingIndex * 15), 0xfff54242);
-							}
-							
-							
+								if (s.isSlider())
+								{
+									sliderButtons.add(new SliderButton(s, m, 180, 74 + yOffset, 280, 75 + yOffset));
+								}
 								
-							
-						}
-						
-						if(comboSettingButtons.size() < comboAmount)
-							comboSettingButtons.add(new ComboSettingButton(sr.getScaledWidth() / 2 + 128, 84 + (settingIndex * 15), sr.getScaledWidth() / 2 + 139, 94 + (settingIndex * 15), s, false));
-						
+								if (s.isCombo())
+								{
+									multiButtons.add(new MultiButton(s, m, false, 180, 74 + yOffset, 230, 84 + yOffset));
+								}
+								
+								if (s.isColor())
+								{
+									colorButtons.add(new ColorButton(s, m, false,180, 74 + yOffset, 190, 84 + yOffset));
+								}
+								
+								yOffset += 14;
+							}
+						}		
 					}
-					
-					
-					
-					
-					settingIndex++;
 				}
 			}
-			
-		}
-		
-		mc.getTextureManager().bindTexture(new ResourceLocation("icons/clienticon.png"));
-		this.drawModalRectWithCustomSizedTexture(sr.getScaledWidth() / 2 - 145, 40  + 14, 0, 0, 20, 20, 20, 20);
-		
-		mc.getTextureManager().bindTexture(new ResourceLocation("icons/swordicon.png"));
-		this.drawModalRectWithCustomSizedTexture(sr.getScaledWidth() / 2 - 150, 40 + 30 + 10, 0, 0, 30, 30, 30, 30);
-		
-		mc.getTextureManager().bindTexture(new ResourceLocation("icons/movementicon.png"));
-		this.drawModalRectWithCustomSizedTexture(sr.getScaledWidth() / 2 - 150, 40 + 30 * 2 + 10, 0, 0, 30, 30, 30, 30);
-		
-		mc.getTextureManager().bindTexture(new ResourceLocation("icons/playericon.png"));
-		this.drawModalRectWithCustomSizedTexture(sr.getScaledWidth() / 2 - 150, 40 + 30 * 3 + 10, 0, 0, 30, 30, 30, 30);
-		
-		mc.getTextureManager().bindTexture(new ResourceLocation("icons/rendericon.png"));
-		this.drawModalRectWithCustomSizedTexture(sr.getScaledWidth() / 2 - 150, 40 + 30 * 4 + 10, 0, 0, 30, 30, 30, 30);
-		
-		mc.getTextureManager().bindTexture(new ResourceLocation("icons/worldicon.png"));
-		this.drawModalRectWithCustomSizedTexture(sr.getScaledWidth() / 2 - 150, 40 + 30 * 5 + 10, 0, 0, 30, 30, 30, 30);
-		
-		oldsrw = sr.getScaledWidth();
-		oldsrh = sr.getScaledHeight();
-	}
-	
-	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		for(ToggleButton b : toggleButtons) {
-			if(mouseX >= b.startX && mouseX <= b.endX && mouseY >= b.startZ && mouseY <= b.endZ) {
-				b.m.toggle();
-			}
-		}
-		int i = 0;
-		for(CategoryButton b : cButtons) {
-			
-			if(mouseX >= b.startX && mouseX <= b.endX && mouseY >= b.startZ && mouseY <= b.endZ) {
-				currentCategory = i;
-				currentscroll = 0;
-			}
-			i++;
-		}
-		for(SettingButton b : settingButtons) {
-			if(mouseX >= b.startX && mouseX <= b.endX && mouseY >= b.startZ && mouseY <= b.endZ) {
-				activeModule = b.m;
-				toggleSettingButtons.clear();
-			}
-		}
-		for(ToggleSettingButton b : toggleSettingButtons) {
-			if(mouseX >= b.startX && mouseX <= b.endX && mouseY >= b.startZ && mouseY <= b.endZ) {
-				if(b.s.getValBoolean()) {
-					b.s.setValBoolean(false);
+			if (openSettings)
+			{
+				if(mouseX >= 506 && mouseX <= 510 && mouseY >= 46 && mouseY <= 52)
+				{
+					for(MEDMEX.myClickGUI.Module m2 : modules)
+						m2.settings = false;
+					openSettings = false;
 				}
-				else {
-					b.s.setValBoolean(true);
-					
+				
+				if(mouseX >= keybindButton.minX && mouseX <= keybindButton.maxX + fr.getStringWidth(keybindString) / 2 && mouseY >= keybindButton.minY && mouseY <= keybindButton.maxY)
+				{
+					listening = true;
+					keybindString = "...";
 				}
-			}
-		}
-		for(SliderSettingButton b : sliderSettingButtons) {
-			if(mouseX >= b.startX && mouseX <= b.endX && mouseY >= b.startZ && mouseY <= b.endZ) {
-				currentslider = b.s;
-				sliding = true;
-			}
-		}
-		for(ComboSettingButton b : comboSettingButtons) {
-			if(mouseX >= b.startX && mouseX <= b.endX && mouseY >= b.startZ && mouseY <= b.endZ) {
-				if(b.extended)
-					b.extended = false;
-				else
-					b.extended = true;
-			}
-		}
-		for(ComboValueSettingButton b : combovalueSettingButtons) {
-			if(mouseX >= b.startX && mouseX <= b.endX && mouseY >= b.startZ && mouseY <= b.endZ) {
-				b.s.setValString(b.str);
-			}
-		}
-		if(keybindButton != null) {
-			if(mouseX >= keybindButton.startX && mouseX <= keybindButton.endX && mouseY >= keybindButton.startZ && mouseY <= keybindButton.endZ) {
-				listenForKeybind = true;
-			}
-		}
-		if(drawnButton != null) {
-			if(mouseX >= drawnButton.startX && mouseX <= drawnButton.endX && mouseY >= drawnButton.startZ && mouseY <= drawnButton.endZ) {
-				if(Client.drawn.contains(drawnButton.m)) {
-					Client.drawn.remove(drawnButton.m);
-				}else {
-					Client.drawn.add(drawnButton.m);
+				
+				for (BooleanButton bb : booleanButtons)
+				{
+					if (mouseX >= bb.minX && mouseX <= bb.maxX && mouseY >= bb.minY && mouseY <= bb.maxY)
+					{
+						if (bb.s.getValBoolean())
+						{
+							bb.s.setValBoolean(false);
+							return;
+						}
+						else
+						{
+							bb.s.setValBoolean(true);
+							return;
+						}
+					}
+				}
+				
+				for (SliderButton sb : sliderButtons)
+				{
+					if (mouseX >= sb.minX && mouseX <= sb.maxX && mouseY >= sb.minY + 2 && mouseY <= sb.maxY + 6)
+					{
+						currentSlider = sb;
+						sliding = true;
+					}
+				}
+				
+				for (MultiButton mb : multiButtons)
+				{
+					if (mouseX >= mb.minX && mouseX <= mb.maxX && mouseY >= mb.minY && mouseY <= mb.maxY)
+					{
+						if (mb.show)
+						{
+							mb.show = false;
+							optionButtons.clear();
+						}
+						else
+						{
+							for (MultiButton mb2 : multiButtons)
+								mb2.show = false;
+							optionButtons.clear();
+							mb.show = true;
+							double yOffset = 0;
+							for (String s : mb.s.getOptions())
+							{
+								optionButtons.add(new OptionButton(s, mb.s, mb.mod, 420, 60 + yOffset, 475, 70 + yOffset));
+								yOffset += 14;
+							}
+						}
+						return;
+					}
+				}
+				
+				
+				for (OptionButton ob : optionButtons)
+				{
+					if (mouseX >= ob.minX && mouseX <= ob.maxX && mouseY >= ob.minY && mouseY <= ob.maxY)
+					{
+						ob.set.setValString(ob.s);
+					}
+				}
+				
+				
+				if (mouseX >= drawnButton.minX && mouseX <= drawnButton.maxX && mouseY >= drawnButton.minY && mouseY <= drawnButton.maxY)
+				{
+					if (Client.drawn.contains(drawnButton.mod.mod))
+					{
+						Client.drawn.remove(drawnButton.mod.mod);
+						return;
+					}
+					else
+					{
+						Client.drawn.add(drawnButton.mod.mod);
+						return;
+					}
 				}
 			}
 		}
 	}
 	
-	protected void mouseReleased(int par1, int par2, int par3)
-    {
-		if(par3 == 0)
-		sliding = false;
-    }
+	public boolean sliding = false;
 	
-	public void handleKeyboardInput()
-    {
-		if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE && !listenForKeybind) {
-			this.mc.displayGuiScreen((GuiScreen)null);
-        	this.mc.setIngameFocus();
+	public SliderButton currentSlider;
+	
+	public String keybindString;
+	
+	public boolean listening;
+	
+	protected void keyTyped(char typedChar, int keyCode) 
+	{
+		if(keybindButton != null && keyCode == 1 && !listening)
+		{
+			for(MEDMEX.myClickGUI.Module m : modules)
+				m.settings = false;
+			openSettings = false;
+			keybindButton = null;
+			
+			return;
 		}
 		
-		if(listenForKeybind) {
-			if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
-				activeModule.keyCode.setKeyCode(Keyboard.KEY_NONE);
-			}else
-			activeModule.keyCode.setKeyCode(Keyboard.getEventKey());
-			listenForKeybind = false;
+		if (listening)
+		{
+			if(keyCode == 1)
+				keyCode = Keyboard.KEY_NONE;
+			keybindButton.mod.mod.keyCode.setKeyCode(keyCode);
+			keybindString = Keyboard.getKeyName(keyCode);
+			listening = false;
+			return;
 		}
-    }
+		
+		super.keyTyped(typedChar, keyCode);
+	}
+	
+	public void mouseMovedOrUp(int mouseX, int mouseY, int state) {
+		
+		if (state == 0)
+			sliding = false;
+		
+		super.mouseMovedOrUp(mouseX, mouseY, state);
+	}
 }
-
-

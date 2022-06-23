@@ -7,7 +7,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import MEDMEX.Commands.CommandManager;
 import MEDMEX.Config.Config;
-import MEDMEX.Config.ConfigDrawn;
 import de.Hero.settings.SettingsManager;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.Packet;
@@ -26,12 +25,13 @@ import MEDMEX.Modules.Player.*;
 import MEDMEX.Modules.Render.*;
 import MEDMEX.Modules.World.*;
 import MEDMEX.UI.GuiCommands;
+import MEDMEX.Utils.StorageUtils;
 import MEDMEX.Modules.Module;
 
 
 public class Client {
 	public static int protocolver = 78;
-	public static String name = "Yeezus", version = "5";
+	public static String name = "Yeezus", version = "6";
 	public static CopyOnWriteArrayList<Integer> xrayblocks = new CopyOnWriteArrayList<Integer>();
 	public static CopyOnWriteArrayList<Macro> macros = new CopyOnWriteArrayList<Macro>();
 	public static CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<Module>();
@@ -100,14 +100,16 @@ public class Client {
 		modules.add(new Tower());
 		modules.add(new AutoPot());
 		modules.add(new AutoGapple());
+		modules.add(new AutoSign());
+		modules.add(new EntitySpeed());
 		try {
-		Config.load();
+			StorageUtils.loadConfig();
+		Config.loadConfig();
 		}catch(Exception e) {
 			
 		}
 		ConfigWaypoints.load();
 		ConfigFriends.load();
-		ConfigDrawn.load();
 		ConfigMacro.load();
 		
 		System.out.println("Loading "+ name +" "+ version);

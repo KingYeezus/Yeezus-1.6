@@ -2,6 +2,9 @@ package net.minecraft.src;
 
 import org.lwjgl.opengl.GL11;
 
+import MEDMEX.Client;
+import MEDMEX.Modules.Render.NoRender;
+
 public class TileEntitySignRenderer extends TileEntitySpecialRenderer
 {
     private static final ResourceLocation field_110638_a = new ResourceLocation("textures/entity/sign.png");
@@ -11,7 +14,9 @@ public class TileEntitySignRenderer extends TileEntitySpecialRenderer
 
     public void renderTileEntitySignAt(TileEntitySign par1TileEntitySign, double par2, double par4, double par6, float par8)
     {
+    	if(!NoRender.instance.isEnabled() || !Client.settingsmanager.getSettingByName("NoRender Signs").getValBoolean()) {
         Block var9 = par1TileEntitySign.getBlockType();
+        
         GL11.glPushMatrix();
         float var10 = 0.6666667F;
         float var12;
@@ -80,6 +85,7 @@ public class TileEntitySignRenderer extends TileEntitySpecialRenderer
         GL11.glDepthMask(true);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glPopMatrix();
+    	}
     }
 
     public void renderTileEntityAt(TileEntity par1TileEntity, double par2, double par4, double par6, float par8)
