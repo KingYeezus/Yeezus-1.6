@@ -2,6 +2,7 @@ package net.minecraft.src;
 
 import org.lwjgl.input.Keyboard;
 
+import MEDMEX.Modules.Movement.AutoWalk;
 import MEDMEX.Modules.Movement.InventoryMove;
 
 public class MovementInputFromOptions extends MovementInput
@@ -15,7 +16,7 @@ public class MovementInputFromOptions extends MovementInput
 
     public void updatePlayerMoveState()
     {
-    	if(InventoryMove.instance != null && InventoryMove.instance.isEnabled() && !(Minecraft.getMinecraft().currentScreen instanceof GuiChat) &&  !(Minecraft.getMinecraft().currentScreen instanceof GuiEditSign)) {
+    	if(InventoryMove.instance != null && InventoryMove.instance.isEnabled() && !AutoWalk.instance.isEnabled() && !(Minecraft.getMinecraft().currentScreen instanceof GuiChat) &&  !(Minecraft.getMinecraft().currentScreen instanceof GuiEditSign)) {
             this.moveStrafe = 0.0F;
             this.moveForward = 0.0F;
             if (Keyboard.isKeyDown(this.gameSettings.keyBindForward.keyCode)) {
