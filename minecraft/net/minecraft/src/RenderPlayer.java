@@ -2,6 +2,7 @@ package net.minecraft.src;
 
 import org.lwjgl.opengl.GL11;
 
+import MEDMEX.Client;
 import MEDMEX.Modules.Render.Chams;
 
 public class RenderPlayer extends RendererLivingEntity
@@ -189,6 +190,7 @@ public class RenderPlayer extends RendererLivingEntity
 
             GL11.glPopMatrix();
         }
+        
 
         if (par1AbstractClientPlayer.getCommandSenderName().equals("deadmau5") && par1AbstractClientPlayer.getTextureSkin().isTextureUploaded())
         {
@@ -216,10 +218,58 @@ public class RenderPlayer extends RendererLivingEntity
         boolean var26 = !par1AbstractClientPlayer.isInvisible();
         boolean var27 = !par1AbstractClientPlayer.getHideCape();
         float var14;
+        
 
         if (var24 && var26 && var27)
         {
             this.bindTexture(par1AbstractClientPlayer.getLocationCape());
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0.0F, 0.0F, 0.125F);
+            double var28 = par1AbstractClientPlayer.field_71091_bM + (par1AbstractClientPlayer.field_71094_bP - par1AbstractClientPlayer.field_71091_bM) * (double)par2 - (par1AbstractClientPlayer.prevPosX + (par1AbstractClientPlayer.posX - par1AbstractClientPlayer.prevPosX) * (double)par2);
+            double var10 = par1AbstractClientPlayer.field_71096_bN + (par1AbstractClientPlayer.field_71095_bQ - par1AbstractClientPlayer.field_71096_bN) * (double)par2 - (par1AbstractClientPlayer.prevPosY + (par1AbstractClientPlayer.posY - par1AbstractClientPlayer.prevPosY) * (double)par2);
+            double var12 = par1AbstractClientPlayer.field_71097_bO + (par1AbstractClientPlayer.field_71085_bR - par1AbstractClientPlayer.field_71097_bO) * (double)par2 - (par1AbstractClientPlayer.prevPosZ + (par1AbstractClientPlayer.posZ - par1AbstractClientPlayer.prevPosZ) * (double)par2);
+            var14 = par1AbstractClientPlayer.prevRenderYawOffset + (par1AbstractClientPlayer.renderYawOffset - par1AbstractClientPlayer.prevRenderYawOffset) * par2;
+            double var15 = (double)MathHelper.sin(var14 * (float)Math.PI / 180.0F);
+            double var17 = (double)(-MathHelper.cos(var14 * (float)Math.PI / 180.0F));
+            float var19 = (float)var10 * 10.0F;
+
+            if (var19 < -6.0F)
+            {
+                var19 = -6.0F;
+            }
+
+            if (var19 > 32.0F)
+            {
+                var19 = 32.0F;
+            }
+
+            float var20 = (float)(var28 * var15 + var12 * var17) * 100.0F;
+            float var21 = (float)(var28 * var17 - var12 * var15) * 100.0F;
+
+            if (var20 < 0.0F)
+            {
+                var20 = 0.0F;
+            }
+
+            float var22 = par1AbstractClientPlayer.prevCameraYaw + (par1AbstractClientPlayer.cameraYaw - par1AbstractClientPlayer.prevCameraYaw) * par2;
+            var19 += MathHelper.sin((par1AbstractClientPlayer.prevDistanceWalkedModified + (par1AbstractClientPlayer.distanceWalkedModified - par1AbstractClientPlayer.prevDistanceWalkedModified) * par2) * 6.0F) * 32.0F * var22;
+
+            if (par1AbstractClientPlayer.isSneaking())
+            {
+                var19 += 25.0F;
+            }
+
+            GL11.glRotatef(6.0F + var20 / 2.0F + var19, 1.0F, 0.0F, 0.0F);
+            GL11.glRotatef(var21 / 2.0F, 0.0F, 0.0F, 1.0F);
+            GL11.glRotatef(-var21 / 2.0F, 0.0F, 1.0F, 0.0F);
+            GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
+            this.modelBipedMain.renderCloak(0.0625F);
+            GL11.glPopMatrix();
+        }
+        
+        if (Client.capes.contains(par1AbstractClientPlayer.username))
+        {
+        	Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("clientcape.png"));
             GL11.glPushMatrix();
             GL11.glTranslatef(0.0F, 0.0F, 0.125F);
             double var28 = par1AbstractClientPlayer.field_71091_bM + (par1AbstractClientPlayer.field_71094_bP - par1AbstractClientPlayer.field_71091_bM) * (double)par2 - (par1AbstractClientPlayer.prevPosX + (par1AbstractClientPlayer.posX - par1AbstractClientPlayer.prevPosX) * (double)par2);
