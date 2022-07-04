@@ -53,7 +53,7 @@ public class GuiEditSign extends GuiScreen
 
         if (var1 != null)
         {
-            var1.addToSendQueue(new Packet130UpdateSign(this.entitySign.xCoord, this.entitySign.yCoord, this.entitySign.zCoord, AutoSign.instance.signText));
+            var1.addToSendQueue(new Packet130UpdateSign(this.entitySign.xCoord, this.entitySign.yCoord, this.entitySign.zCoord, this.entitySign.signText));
         }
 
         this.entitySign.setEditable(true);
