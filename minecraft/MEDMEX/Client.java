@@ -65,7 +65,7 @@ public class Client {
 		modules.add(new Xray());
 		modules.add(new Fullbright());
 		modules.add(new Velocity());
-		modules.add(new SpeedMine());
+		modules.add(new Packetmine());
 		modules.add(new BreakProgress());
 		modules.add(new Waypoints());
 		modules.add(new AntiHunger());
@@ -116,19 +116,6 @@ public class Client {
 		modules.add(new AutoGapple());
 		modules.add(new AutoSign());
 		modules.add(new EntitySpeed());
-		modules.add(new Phase());
-		modules.add(new AutoCrystal());
-		modules.add(new AutoTrap());
-		modules.add(new PortalFinder());
-		modules.add(new Noclip());
-		modules.add(new Trajectories());
-		modules.add(new AutoTool());
-		modules.add(new Yaw());
-		modules.add(new AutoTunnel());
-		modules.add(new AutoEat());
-		modules.add(new Safewalk());
-		modules.add(new AutoLog());
-		modules.add(new Refill());
 		try {
 			StorageUtils.loadConfig();
 			Config.loadConfig();
@@ -138,7 +125,6 @@ public class Client {
 		ConfigWaypoints.load();
 		ConfigFriends.load();
 		ConfigMacro.load();
-		ConfigAlts.load();
 		
 		readCapeNames();
 		
