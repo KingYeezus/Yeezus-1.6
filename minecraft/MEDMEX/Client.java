@@ -1,12 +1,23 @@
 package MEDMEX;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import MEDMEX.Commands.CommandManager;
 import MEDMEX.Config.Config;
+import MEDMEX.Config.ConfigAlts;
 import de.Hero.settings.SettingsManager;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.Packet;
@@ -26,19 +37,22 @@ import MEDMEX.Modules.Render.*;
 import MEDMEX.Modules.World.*;
 import MEDMEX.UI.GuiCommands;
 import MEDMEX.Utils.StorageUtils;
+import MEDMEX.altman.AltManager;
 import MEDMEX.Modules.Module;
 
 
 public class Client {
 	public static int protocolver = 78;
-	public static String name = "Yeezus", version = "6";
+	public static String name = "Yeezus", version = "7";
 	public static CopyOnWriteArrayList<Integer> xrayblocks = new CopyOnWriteArrayList<Integer>();
 	public static CopyOnWriteArrayList<Macro> macros = new CopyOnWriteArrayList<Macro>();
 	public static CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<Module>();
 	public static CopyOnWriteArrayList<String> friends = new CopyOnWriteArrayList<String>();
 	public static CopyOnWriteArrayList<Module> drawn = new CopyOnWriteArrayList<Module>();
+	public static CopyOnWriteArrayList<String> capes = new CopyOnWriteArrayList<String>();
 	public static CommandManager commandManager = new CommandManager();
 	public static SettingsManager settingsmanager;
+	public static AltManager altManager;
 	
 	public static void startup(){
 		settingsmanager = new SettingsManager();
@@ -51,7 +65,7 @@ public class Client {
 		modules.add(new Xray());
 		modules.add(new Fullbright());
 		modules.add(new Velocity());
-		modules.add(new Packetmine());
+		modules.add(new SpeedMine());
 		modules.add(new BreakProgress());
 		modules.add(new Waypoints());
 		modules.add(new AntiHunger());
@@ -102,15 +116,31 @@ public class Client {
 		modules.add(new AutoGapple());
 		modules.add(new AutoSign());
 		modules.add(new EntitySpeed());
+		modules.add(new Phase());
+		modules.add(new AutoCrystal());
+		modules.add(new AutoTrap());
+		modules.add(new PortalFinder());
+		modules.add(new Noclip());
+		modules.add(new Trajectories());
+		modules.add(new AutoTool());
+		modules.add(new Yaw());
+		modules.add(new AutoTunnel());
+		modules.add(new AutoEat());
+		modules.add(new Safewalk());
+		modules.add(new AutoLog());
+		modules.add(new Refill());
 		try {
 			StorageUtils.loadConfig();
-		Config.loadConfig();
+			Config.loadConfig();
 		}catch(Exception e) {
 			
 		}
 		ConfigWaypoints.load();
 		ConfigFriends.load();
 		ConfigMacro.load();
+		ConfigAlts.load();
+		
+		readCapeNames();
 		
 		System.out.println("Loading "+ name +" "+ version);
 	}
@@ -218,6 +248,24 @@ public static List<Module> getModules(){
 	
 	return modules;
 	
+}
+
+public static void readCapeNames()
+{
+	try
+	{
+        URL url = new URL("https://raw.githubusercontent.com/KingYeezus/Yeezus-1.6/master/cape.txt");
+        BufferedReader read = new BufferedReader(
+        new InputStreamReader(url.openStream()));
+        String i;
+        while ((i = read.readLine()) != null)
+            capes.add(i);
+        read.close();
+	} catch (Exception e)
+	{
+		
+	}
+
 }
 
 public static void addChatMessage(String message) {
