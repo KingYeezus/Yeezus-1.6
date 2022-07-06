@@ -8,3 +8,6 @@ nu3
 bstar__
 blackstar
 godmode
+00
+Cyri
+hausemaster
